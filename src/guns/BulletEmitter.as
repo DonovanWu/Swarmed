@@ -16,13 +16,14 @@ package guns
 		public var damage:int = 0;
 		public var mobility:Number = 1;
 		public var ads_multi:Number = 1;
+		public var type:String = "rifle";
 		
-		protected var gunstat:Object;
+		public var gunstat:Object;
 		
 		protected var pellets:int;
 		public var mag:int = 1;			// bullet left in magazine
 		protected var mag_size:int;		// magazine size: set to 0 or negative for inf ammo
-		protected var ammo:int = 1;			// total ammo this gun has
+		public var ammo:int = 1;			// total ammo this gun has
 		
 		protected var bullet_spd:Number;
 		protected var orpm:Number;
@@ -65,6 +66,9 @@ package guns
 			mobility = gunstat.mobility;
 			ads_multi = gunstat.ads_multi;
 			name = gunstat.name;
+			if (gunstat.type != null) {
+				type = gunstat.type;
+			}
 			
 			reset_gun();
 		}
@@ -110,7 +114,7 @@ package guns
 			if (ct_burst >= Math.abs(burst) && ct_brpm >= brpm) ct_burst = 0;
 			
 			if (mag <= 0) {
-				reload();
+				_ch.reloadOp();
 			}
 		}
 		
@@ -180,15 +184,21 @@ package guns
 			}
 		}
 		
-		private function reload():void {
-			// TODO: reload animation, halt character, etc.
-			// TODO: ammo should be in clip after animation finishes
-			
+		public function needReload():Boolean {
+			return mag != mag_size;
+		}
+		
+		public function reload():void {
 			var ammo_used:int = mag_size - mag;
 			if (ammo < ammo_used) {
 				mag = ammo;
 			} else {
 				mag = mag_size;
+			}
+			
+			if (!_ch.player_controlled) {
+				// ai doesn't consume backup ammo
+				ammo += ammo_used;
 			}
 		}
 		
@@ -212,16 +222,19 @@ package guns
 			
 			var muzzle_pos:FlxPoint = _ch.muzzle_position();
 			
-			var bullet:Bullet = new Bullet(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage);
+			var range:Number = (gunstat.range == null)?930:gunstat.range;
+			var bullet:Bullet = new Bullet(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage, range);
 			_g.bullets.add(bullet);
+		}
+		
+		public function setAmmo(n_ammo:int, n_mag:int = -1):void {
+			if (n_mag < 0) {
+				mag = mag_size;
+			} else {
+				mag = n_mag;
+			}
 			
-			/*
-			var bullet:GunBullet = 
-				new GunBullet(muzzle_pos, ang, _stat.speed, _stat.damage, _stat.range);
-			muzzle_pos = Util.repos2ctr(bullet, muzzle_pos, ang * Util.RADIAN);
-			bullet.set_position(muzzle_pos.x, muzzle_pos.y);
-			_g.bullets.add(bullet);
-			*/
+			ammo = n_ammo;
 		}
 	}
 

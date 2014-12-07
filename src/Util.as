@@ -3,6 +3,7 @@ package  {
 	import flash.display.Sprite;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
+	import guns.*;
 	import org.flixel.*;
 	import flash.geom.*;
 	import flash.display.*;
@@ -200,6 +201,73 @@ package  {
 		
 		public static function is_out_of_bound(spr:FlxSprite, bound:FlxPoint):Boolean {
 			return spr.x < 0 || spr.x > bound.x || spr.y < 0 || spr.y > bound.y;
+		}
+		
+		public static function consecutive_num(start:int, end:int):Array {
+			var arr:Array = [];
+			for (var i:int = start; i <= end; i++ ) {
+				arr.push(i);
+			}
+			return arr;
+		}
+		
+		public static function weapon_map_emitter(name:String):BulletEmitter {
+			switch(name) {
+				case "Assualt Rifle":
+					return new AssualtRifle();
+				case "Assualt Shotgun":
+					return new AutoShotgun();
+				case "Bulp-up Rifle":
+					return new BurstRifle();
+				case "Tactical Shotgun":
+					return new BurstShotgun();
+				case "Double Barrel":
+					return new DoubleBarrel();
+				case "Handgun":
+					return new Handgun();
+				case "Light Machine Gun":
+					return new LightMachineGun();
+				case "Machine Pistol":
+					return new MachinePistol();
+				case "Marksman Rifle":
+					return new MarksmanRifle();
+				case "Revolver":
+					return new Revolver();
+				case "Rocket Launcher":
+					return new RocketLauncher();
+				default:
+					// case "Submachine Gun":
+					return new SubmachineGun();
+			}
+		}
+		
+		public static function weapon_map_import(name:String):Class {
+			switch(name) {
+				case "Assualt Rifle":
+					return Imports.GUN_ASSAULT_RIFLE;
+				case "Assualt Shotgun":
+					return Imports.GUN_ASSAULT_SHOTGUN;
+				case "Bulp-up Rifle":
+					return Imports.GUN_BULPUP_RIFLE;
+				case "Tactical Shotgun":
+					return Imports.GUN_TACTICAL_SHOTGUN;
+				case "Double Barrel":
+					return Imports.GUN_DOUBLE_BARREL;
+				case "Handgun":
+					return Imports.GUN_HANDGUN;
+				case "Light Machine Gun":
+					return Imports.GUN_LIGHT_MACHINE_GUN;
+				case "Machine Pistol":
+					return Imports.GUN_MACHINE_PISTOL;
+				case "Marksman Rifle":
+					return Imports.GUN_MARKSMAN_RIFLE;
+				case "Revolver":
+					return Imports.GUN_REVOLVER;
+				case "Submachine Gun":
+					return Imports.GUN_SUBMACHINE_GUN;
+				default:
+					return null;
+			}
 		}
 	}
 

@@ -22,6 +22,16 @@ package  {
 		[Embed( source = "../resc/chars/knight_limbs.png" )] public static var KNIGHT_LIMBS:Class;
 		
 // weapon sprites
-		[Embed( source = "../resc/guns/AssaultRifle.png" )] public static var GUN_ASSUALT_RIFLE:Class;
+		[Embed( source = "../resc/guns/AssaultRifle.png" )] public static var GUN_ASSAULT_RIFLE:Class;
+		[Embed( source = "../resc/guns/AssaultShotgun.png" )] public static var GUN_ASSAULT_SHOTGUN:Class;
+		[Embed( source = "../resc/guns/BulpUpRifle.png" )] public static var GUN_BULPUP_RIFLE:Class;
+		[Embed( source = "../resc/guns/DoubleBarrel.png" )] public static var GUN_DOUBLE_BARREL:Class;
+		[Embed( source = "../resc/guns/Handgun.png" )] public static var GUN_HANDGUN:Class;
+		[Embed( source = "../resc/guns/LightMachineGun.png" )] public static var GUN_LIGHT_MACHINE_GUN:Class;
+		[Embed( source = "../resc/guns/MachinePistol.png" )] public static var GUN_MACHINE_PISTOL:Class;
+		[Embed( source = "../resc/guns/MarksmanRifle.png" )] public static var GUN_MARKSMAN_RIFLE:Class;
+		[Embed( source = "../resc/guns/Revolver.png" )] public static var GUN_REVOLVER:Class;
+		[Embed( source = "../resc/guns/TacticalShotgun.png" )] public static var GUN_TACTICAL_SHOTGUN:Class;
+		[Embed( source = "../resc/guns/SubmachineGun.png" )] public static var GUN_SUBMACHINE_GUN:Class;
 	}
 }

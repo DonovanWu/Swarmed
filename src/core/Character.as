@@ -32,8 +32,6 @@ package core
 		public var hp:int;
 		public var max_hp:int = 100;
 		public var mobility:Number = 1.0;
-		// public var weapons:Array = [];
-		// public var weapon:BulletEmitter = new BulletEmitter({});
 		
 		public function Character() {
 			moveSpeed = walkSpeed;
@@ -109,22 +107,7 @@ package core
 				}
 			}
 			
-			/*
-			if (Util.is_key(Util.WEAPON_SWITCH, true)) {
-				curr_weap = Util.key_index(Util.WEAPON_SWITCH);
-				if (curr_weap > weapons.length - 1 || curr_weap < 0) {
-					curr_weap = 0;
-				}
-				stance = "hip";
-				trace("switched to weapon: " + weapons[curr_weap].name());
-			}
-			
-			if (Util.is_key(Util.RELOAD, true)) {
-				weapons[curr_weap].reload();
-				trace("reload");
-			}
-			*/
-
+			weapon_control();
 		}
 		
 		protected function update_mouse():void {
@@ -153,14 +136,6 @@ package core
 			sprintAnimation();
 		}
 		
-		protected function walkAnimation():void {
-			return;
-		}
-		
-		protected function sprintAnimation():void {
-			return;
-		}
-		
 		protected function update_ai():void {
 			if (_g == null) {
 				return;
@@ -173,7 +148,27 @@ package core
 			// update AI
 		}
 		
+		/*
+		 * "Blue print" section!
+		 */
+		
+		public function walkAnimation():void {
+			return;
+		}
+		
+		public function sprintAnimation():void {
+			return;
+		}
+		
+		public function reloadOp():void {
+			return;
+		}
+		
 		protected function update_weapon():void {
+			return;
+		}
+		
+		public function weapon_control():void {
 			return;
 		}
 		
@@ -183,6 +178,10 @@ package core
 		
 		public function getWeapon():BulletEmitter {
 			return null;
+		}
+		
+		public function getWeaponMapStat():Array {
+			return [];
 		}
 		
 		protected function line_up_with_muzzle(dx:Number, dy:Number):FlxPoint {

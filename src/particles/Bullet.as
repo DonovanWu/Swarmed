@@ -9,14 +9,14 @@ package particles
 		private var _range:Number;
 		private var _damage:int;
 		
-		public function Bullet(x:Number = 0, y:Number = 0, ang:Number = 0, speed:Number = 5, damage:int = 0) {
+		public function Bullet(x:Number = 0, y:Number = 0, ang:Number = 0, speed:Number = 5, damage:int = 0, range:Number = 1200) {
 			super(x, y);
 			
 			this._speed = speed;
 			this._angle = ang;
 			this._distance = 0;
-			this._range = 1200;
-			this._damage = _damage;
+			this._range = range;
+			this._damage = damage;
 			this.angle = ang;
 			
 			this.loadGraphic(Imports.BULLET_ROUND);

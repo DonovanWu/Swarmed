@@ -17,6 +17,7 @@ package {
 		public static var firstTime:Boolean = true;
 		public var tutorialObjs:FlxGroup = new FlxGroup();
 		public static var tutor_timer:int = Util.TUTOR_TIMER;
+		public var title:Boolean = true;
 		
 		// status bar
 		public var status_bar:FlxSprite = new FlxSprite();
@@ -32,10 +33,12 @@ package {
 		public var reticle:FlxSprite = new FlxSprite();
 		
 		// save
-		public static var progress:Object = {knight:[0,0], vanguard:[0,0]};
+		public static var progress:Object = { knight:[0, 0], vanguard:[0, 0] };
+		public var ammunition:Array = [{ mag:1, ammo:1 }, { mag:1, ammo:1 }];
 		
 		// special
 		public var debug_text:FlxText = new FlxText(0, 0, 320);
+		public var gameStart:Boolean = false;
 		
 		override public function create():void {
 			super.create();
@@ -64,7 +67,7 @@ package {
 		}
 		
 		public function add_chars():void {
-			var knight:Knight = new Knight(320, 320);
+			var knight:Knight = new Knight(320, 320, progress.knight[0], progress.knight[1], true);
 			chars.add(knight);
 			
 			this.add(chars);
@@ -106,6 +109,17 @@ package {
 			this.add(reticle);
 		}
 		
+		public function init_ammunition():void {
+			if (player != null && player.getWeapon() != null) {
+				// pull from weapon stat directly!
+				var data:Array = player.getWeaponMapStat();
+				ammunition[0].mag = data[0].mag_size;
+				ammunition[0].ammo = data[0].ammo;
+				ammunition[1].mag = data[1].mag_size;
+				ammunition[1].ammo = data[2].ammo;
+			}
+		}
+		
 		// assign which thing on scene is going to be player
 		public function set_player():void {
 			player = chars.getFirstAlive() as Character;
@@ -113,6 +127,13 @@ package {
 		
 		override public function update():void {
 			super.update();
+			
+			/*
+			if (!gameStart) {
+				init_ammunition();
+				gameStart = true;
+			}
+			*/
 			
 			update_characters();
 			update_bullets();
@@ -124,7 +145,7 @@ package {
 		}
 		
 		private function update_tutorial():void {
-			
+			return;
 		}
 		
 		private function update_reticle():void {

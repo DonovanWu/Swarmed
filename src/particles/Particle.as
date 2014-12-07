@@ -9,7 +9,6 @@ package particles
 		
 		public function Particle(x:Number = 0, y:Number = 0) {
 			super(x, y);
-			// this.set_scale(1.5);
 		}
 		
 		public function bullet_update(game:GameEngine):void { }
