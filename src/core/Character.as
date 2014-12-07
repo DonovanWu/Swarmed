@@ -11,13 +11,8 @@ package core
 	 */
 	public class Character extends FlxGroupSprite
 	{
-		/*
-		public var body:FlxSprite = new FlxSprite();
-		public var limbs:FlxSprite = new FlxSprite();
-		public var hitbox:FlxSprite = new FlxSprite();
-		*/
 		
-		private var _g:GameEngine;
+		protected var _g:GameEngine;
 		
 		public var player_controlled:Boolean = false;
 		// boolean alive
@@ -33,13 +28,16 @@ package core
 		public var isSprinting:Boolean = false;
 		public var stance:String = "hip";
 		
-		// item info
+		// character info
+		public var hp:int;
+		public var max_hp:int = 100;
+		public var mobility:Number = 1.0;
 		// public var weapons:Array = [];
 		// public var weapon:BulletEmitter = new BulletEmitter({});
 		
 		public function Character() {
 			moveSpeed = walkSpeed;
-			
+			hp = max_hp;
 			// weapon = new AssualtRifle();
 			// this.add(weapon);
 		}
@@ -55,7 +53,6 @@ package core
 			}
 			
 			update_weapon();
-			// weapon.update_emitter(_g, this);
 		}
 		
 		protected function update_control():void {
@@ -133,36 +130,34 @@ package core
 		protected function update_mouse():void {
 			var dy:Number = FlxG.mouse.y - y();
 			var dx:Number = FlxG.mouse.x - x();
-			/*
-			if (dy*dy + dx*dx > _weap_off.x*_weap_off.x + _weap_off.y*_weap_off.y) {
-				// spin-prevented match-up to muzzle position
-				dy = FlxG.mouse.y - _weap_pos.y;
-				dx = FlxG.mouse.x - _weap_pos.x;
-			}
-			*/
+			
+			var dr:FlxPoint = line_up_with_muzzle(dx, dy);
+			
+			dy = dr.y;
+			dx = dr.x;
 			
 			ang = Math.atan2(dy, dx) * Util.RAD2DEG;
 		}
 		
 		override public function update_position():void {
-			
-		}
-		
-		public function walk():void {
-			moveSpeed = walkSpeed; // * weapon.mobility();
-			toggleWalkAnimation();
-		}
-		
-		public function sprint():void {
-			moveSpeed = sprintSpeed; // * weapon.mobility();
-			toggleSprintAnimation();
-		}
-		
-		protected function toggleWalkAnimation():void {
 			return;
 		}
 		
-		protected function toggleSprintAnimation():void {
+		public function walk():void {
+			moveSpeed = walkSpeed * mobility;
+			walkAnimation();
+		}
+		
+		public function sprint():void {
+			moveSpeed = sprintSpeed * mobility;
+			sprintAnimation();
+		}
+		
+		protected function walkAnimation():void {
+			return;
+		}
+		
+		protected function sprintAnimation():void {
 			return;
 		}
 		
@@ -182,30 +177,16 @@ package core
 			return;
 		}
 		
-		public function weapon_position():FlxPoint {
-			return null;
-		}
-		
 		public function muzzle_position():FlxPoint {
 			return new FlxPoint(x(), y());
 		}
 		
-		public function trigger_p():Boolean {
-			if (player_controlled) {
-				return FlxG.mouse.pressed();
-			} else {
-				// ai controlled
-				return false;
-			}
+		public function getWeapon():BulletEmitter {
+			return null;
 		}
 		
-		public function trigger_jp():Boolean {
-			if (player_controlled) {
-				return FlxG.mouse.justPressed();
-			} else {
-				// ai controlled
-				return false;
-			}
+		protected function line_up_with_muzzle(dx:Number, dy:Number):FlxPoint {
+			return new FlxPoint(dx, dy);
 		}
 	}
 

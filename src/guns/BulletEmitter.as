@@ -12,14 +12,17 @@ package guns
 		private var _g:GameEngine;
 		private var _ch:Character;
 		
-		public var damage:int;
+		public var name:String = "";
+		public var damage:int = 0;
+		public var mobility:Number = 1;
+		public var ads_multi:Number = 1;
 		
 		protected var gunstat:Object;
 		
 		protected var pellets:int;
-		protected static var mag:int = 1;			// bullet left in magazine
+		public var mag:int = 1;			// bullet left in magazine
 		protected var mag_size:int;		// magazine size: set to 0 or negative for inf ammo
-		protected static var ammo:int = 1;			// total ammo this gun has
+		protected var ammo:int = 1;			// total ammo this gun has
 		
 		protected var bullet_spd:Number;
 		protected var orpm:Number;
@@ -55,10 +58,13 @@ package guns
 				brpm = orpm;
 			}
 			
-			// other stats often used
+			// frequently used stats
 			bullet_spd = gunstat.speed;
 			pellets = gunstat.pellets;
 			damage = gunstat.damage;
+			mobility = gunstat.mobility;
+			ads_multi = gunstat.ads_multi;
+			name = gunstat.name;
 			
 			reset_gun();
 		}
@@ -67,7 +73,7 @@ package guns
 			_g = game;
 			_ch = char;
 			
-			if (triggered(_ch.trigger_p(), _ch.trigger_jp())) {
+			if (triggered()) {
 				
 				if (burst != 0 && ct_brpm >= brpm) ct_brpm -= brpm;
 				
@@ -109,8 +115,17 @@ package guns
 		}
 		
 		// differentiates types of triggering
-		private function triggered(p:Boolean, jp:Boolean):Boolean {
+		private function triggered():Boolean {
 			if (_ch.isSprinting) return false;
+			
+			var p:Boolean = false;
+			var jp:Boolean = false;
+			if (_ch.player_controlled) {
+				p = FlxG.mouse.pressed();
+				jp = FlxG.mouse.justPressed();
+			} else {
+				// ai signal
+			}
 			
 			if (burst == 0) {
 				return p;
@@ -194,7 +209,6 @@ package guns
 			}
 			
 			var theta:Number = _ch.ang + Util.float_random( -ds, ds);
-			_g.debug_text.text = theta + "";
 			
 			var muzzle_pos:FlxPoint = _ch.muzzle_position();
 			

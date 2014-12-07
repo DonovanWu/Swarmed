@@ -18,11 +18,23 @@ package {
 		public var tutorialObjs:FlxGroup = new FlxGroup();
 		public static var tutor_timer:int = Util.TUTOR_TIMER;
 		
+		// status bar
+		public var status_bar:FlxSprite = new FlxSprite();
+		public var hp_info:FlxText = new FlxText(0, 0, 150);
+		public var gun_info:FlxText = new FlxText(0, 0, 300);
+		public var ammo_info:FlxText = new FlxText(0, 0, 150);
+		
+		// in-game settings
 		public var bg:FlxSprite = new FlxSprite();
 		public var bullets:FlxGroup = new FlxGroup();
 		public var chars:FlxGroup = new FlxGroup();
 		public var player:Character;
+		public var reticle:FlxSprite = new FlxSprite();
 		
+		// save
+		public static var progress:Object = {knight:[0,0], vanguard:[0,0]};
+		
+		// special
 		public var debug_text:FlxText = new FlxText(0, 0, 320);
 		
 		override public function create():void {
@@ -36,11 +48,11 @@ package {
 			this.add(bullets);
 			
 			// layer: top
+			add_status_bar();
 			add_tutorial_objs();
+			add_reticle();
 			
 			set_player();
-			
-			FlxG.mouse.show();
 			
 			this.add(debug_text);
 		}
@@ -64,6 +76,37 @@ package {
 			this.add(tutorialObjs);
 		}
 		
+		public function add_status_bar():void {
+			status_bar.loadGraphic(Imports.STATUS_BAR);
+			status_bar.set_position(0, 600);
+			
+			var text_y:Number = 610;
+			var text_size:Number = 12;
+			
+			hp_info.set_position(20, text_y);
+			hp_info.text = "hp=???";
+			hp_info.size = text_size;
+			
+			gun_info.set_position(170, text_y);
+			gun_info.text = "gun=???";
+			gun_info.size = text_size;
+			
+			ammo_info.set_position(480, text_y);
+			ammo_info.text = "ammo=???";
+			ammo_info.size = text_size;
+			
+			this.add(status_bar);
+			this.add(hp_info);
+			this.add(gun_info);
+			this.add(ammo_info);
+		}
+		
+		public function add_reticle():void {
+			reticle.loadGraphic(Imports.MOUSE_RETICLE);
+			this.add(reticle);
+		}
+		
+		// assign which thing on scene is going to be player
 		public function set_player():void {
 			player = chars.getFirstAlive() as Character;
 		}
@@ -71,14 +114,23 @@ package {
 		override public function update():void {
 			super.update();
 			
-			update_tutorial();
-
 			update_characters();
 			update_bullets();
+			
+			update_tutorial();
+			update_status_bar();
+			
+			update_reticle();
 		}
 		
 		private function update_tutorial():void {
 			
+		}
+		
+		private function update_reticle():void {
+			var x:Number = FlxG.mouse.x - reticle.width / 2;
+			var y:Number = FlxG.mouse.y - reticle.height / 2;
+			reticle.set_position(x,y);
 		}
 		
 		private function update_characters():void {
@@ -110,16 +162,30 @@ package {
 			
 			// hit test
 			/*
-			FlxG.overlap(_layout, _bullets, function(obj:FlxSprite, bullet:Bullet):void {
+			FlxG.overlap(chars, bullets, function(obj:Character, bullet:Bullet):void {
 				// remove case: hit object
 				// TODO: add hit animation
-				if (obj.ID == Util.ID_IMMOVABLE_OBJ) {
-					itr_bullet.do_remove();
-					_bullets.remove(itr_bullet, true);
-				}
+				itr_bullet.do_remove();
+				_bullets.remove(itr_bullet, true);
 			});
 			*/
 			
+		}
+		
+		private function update_status_bar():void {
+			if (player != null) {
+				hp_info.text = "hp: " + player.hp + " / " + player.max_hp;
+				
+				var gun_text:String = "";
+				var ammo_text:String = "";
+				var weapon:BulletEmitter = player.getWeapon();
+				if (weapon != null) {
+					gun_text = weapon.name;
+					ammo_text = weapon.mag + " / " + weapon.backup_ammo();
+				}
+				gun_info.text = "gun: " + gun_text;
+				ammo_info.text = "ammo: " + ammo_text;
+			}
 		}
 		
 	}
