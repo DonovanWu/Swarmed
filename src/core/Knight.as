@@ -17,7 +17,8 @@ package core
 		public function Knight(x:Number = 0, y:Number = 0, w1_lv:int = 0, w2_lv:int = 0) {
 			// something
 			player_controlled = true;
-			walkSpeed = 2.0;
+			walkSpeed = 1.0;
+			sprintSpeed = 1.5;
 			
 			body.loadGraphic(Imports.KNIGHT_BODY);
 			limbs.loadGraphic(Imports.KNIGHT_LIMBS);
@@ -43,6 +44,10 @@ package core
 			limbs.angle = ang;
 			
 			// update_limb_anim();
+		}
+		
+		override protected function update_weapon():void {
+			
 		}
 		
 	}

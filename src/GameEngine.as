@@ -6,8 +6,10 @@ package {
 	
 	import core.*;
 	import flash.display.*;
+	import guns.*;
 	import misc.FlxGroupSprite;
 	import org.flixel.*;
+	import particles.*;
 	
 	public class GameEngine extends FlxState {
 		
@@ -20,6 +22,8 @@ package {
 		public var bullets:FlxGroup = new FlxGroup();
 		public var chars:FlxGroup = new FlxGroup();
 		public var player:Character;
+		
+		public var debug_text:FlxText = new FlxText(0, 0, 320);
 		
 		override public function create():void {
 			super.create();
@@ -37,6 +41,8 @@ package {
 			set_player();
 			
 			FlxG.mouse.show();
+			
+			this.add(debug_text);
 		}
 		
 		public function add_bg():void {
@@ -68,11 +74,7 @@ package {
 			update_tutorial();
 
 			update_characters();
-			
-			/*
 			update_bullets();
-			update_control();
-			*/
 		}
 		
 		private function update_tutorial():void {
@@ -86,27 +88,28 @@ package {
 			}
 		}
 		
-		/*
 		private function update_bullets():void {
 			for (var i:int = bullets.members.length - 1; i >= 0; i--) {
-				var itr_bullet:BasicBullet = bullets.members[i];
+				var itr_bullet:Bullet = bullets.members[i] as Bullet;
 				if (itr_bullet != null) {	// for some odd reason, things only work if this line is added
 					itr_bullet.update_bullet(this);
 					if (itr_bullet.should_remove()) {
-						// remove case: max range reached; effect: simply disappear
+						// remove case: max range reached
 						itr_bullet.do_remove();
-						_bullets.remove(itr_bullet, true);
+						bullets.remove(itr_bullet, true);
 					}
 					
-					if (Util.is_out_of_bound(itr_bullet, _level.get_bound())) {
+					if (Util.is_out_of_bound(itr_bullet, new FlxPoint(640, 640))) {
 						// remove case: out of bound
 						// TODO: add hit animation
 						itr_bullet.do_remove();
-						_bullets.remove(itr_bullet, true);
+						bullets.remove(itr_bullet, true);
 					}
-				} // end of if
+				} // end of if not null
 			} // end of for
 			
+			// hit test
+			/*
 			FlxG.overlap(_layout, _bullets, function(obj:FlxSprite, bullet:Bullet):void {
 				// remove case: hit object
 				// TODO: add hit animation
@@ -115,9 +118,10 @@ package {
 					_bullets.remove(itr_bullet, true);
 				}
 			});
+			*/
 			
 		}
-		*/
+		
 	}
 	
 }

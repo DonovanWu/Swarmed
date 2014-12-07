@@ -14,7 +14,7 @@ package  {
 		[Embed( source = "../resc/default_bg.jpg" )] public static var DEFAULT_BG:Class;
 
 // particles
-		// [Embed( source = "../resc/particles/bullet_round.png" )] public static var BULLET_ROUND:Class;
+		[Embed( source = "../resc/particles/bullet_round.png" )] public static var BULLET_ROUND:Class;
 
 // player
 		[Embed( source = "../resc/chars/knight_body.png" )] public static var KNIGHT_BODY:Class;

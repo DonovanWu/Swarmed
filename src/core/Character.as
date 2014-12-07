@@ -1,5 +1,8 @@
 package core 
 {
+	import guns.AssualtRifle;
+	import guns.BulletEmitter;
+	import misc.DamageGraph;
 	import misc.FlxGroupSprite;
 	import org.flixel.*;
 	/**
@@ -28,23 +31,31 @@ package core
 		protected var sprintSpeed:Number = 5.0;
 		public var isMoving:Boolean = false;
 		public var isSprinting:Boolean = false;
-		public var stance:int = 0;	// 0 for hip, 1 for aim
+		public var stance:String = "hip";
 		
 		// item info
-		public var weapons:Array = [];
+		// public var weapons:Array = [];
+		// public var weapon:BulletEmitter = new BulletEmitter({});
 		
 		public function Character() {
 			moveSpeed = walkSpeed;
+			
+			// weapon = new AssualtRifle();
+			// this.add(weapon);
 		}
 		
 		public function update_character(game:GameEngine):void {
 			_g = game;
 			
+			// update position
 			if (player_controlled) {
 				update_control();
 			} else {
 				update_ai();
 			}
+			
+			update_weapon();
+			// weapon.update_emitter(_g, this);
 		}
 		
 		protected function update_control():void {
@@ -85,18 +96,18 @@ package core
 			if (Util.is_key(Util.MOVE_SPRINT)) {
 				sprint();
 				isSprinting = true;
-				stance = 0;
+				stance = "hip";
 			} else {
 				walk();
 				isSprinting = false;
 			}
 			
 			if (Util.is_key(Util.TOGGLE_AIM, true)) {
-				if (stance != 1) {
-					stance = 1;	// aim
+				if (stance != "aim") {
+					stance = "aim";
 					trace("changed stance to aim");
 				} else {
-					stance = 0;	// hip
+					stance = "hip";
 					trace("changed stance to hip");
 				}
 			}
@@ -107,7 +118,7 @@ package core
 				if (curr_weap > weapons.length - 1 || curr_weap < 0) {
 					curr_weap = 0;
 				}
-				stance = 0;
+				stance = "hip";
 				trace("switched to weapon: " + weapons[curr_weap].name());
 			}
 			
@@ -165,6 +176,36 @@ package core
 			}
 			
 			// update AI
+		}
+		
+		protected function update_weapon():void {
+			return;
+		}
+		
+		public function weapon_position():FlxPoint {
+			return null;
+		}
+		
+		public function muzzle_position():FlxPoint {
+			return new FlxPoint(x(), y());
+		}
+		
+		public function trigger_p():Boolean {
+			if (player_controlled) {
+				return FlxG.mouse.pressed();
+			} else {
+				// ai controlled
+				return false;
+			}
+		}
+		
+		public function trigger_jp():Boolean {
+			if (player_controlled) {
+				return FlxG.mouse.justPressed();
+			} else {
+				// ai controlled
+				return false;
+			}
 		}
 	}
 
