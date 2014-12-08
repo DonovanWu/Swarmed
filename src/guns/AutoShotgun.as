@@ -14,7 +14,7 @@ package guns
 				speed : 6,
 				orpm : 400,
 				damage : 18,
-				range : 180,
+				range : 150,
 				burst : 0,
 				pellets: 6,
 				mag_size : 20,

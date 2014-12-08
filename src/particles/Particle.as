@@ -11,7 +11,7 @@ package particles
 			super(x, y);
 		}
 		
-		public function bullet_update(game:GameEngine):void { }
+		public function update_particle(game:GameEngine):void { }
 		public function should_remove():Boolean { return true; }
 		public function do_remove():void { }
 	}

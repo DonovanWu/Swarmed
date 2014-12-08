@@ -129,6 +129,8 @@ package guns
 				jp = FlxG.mouse.justPressed();
 			} else {
 				// ai signal
+				p = _ch.shoot_p;
+				jp = _ch.shoot_jp;
 			}
 			
 			if (burst == 0) {

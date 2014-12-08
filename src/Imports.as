@@ -6,6 +6,8 @@ package  {
 	public class Imports {
 		
 		[Embed( source = "../resc/hitbox_25x30.png" )] public static var IMPORT_HITBOX_25x30:Class;
+		[Embed( source = "../resc/roadblock.jpg" )] public static var ROAD_BLOCK:Class;
+		[Embed( source = "../resc/roadblock_v.jpg" )] public static var ROAD_BLOCK_V:Class;
 		
 // accessories
 		[Embed( source = "../resc/reticle.png" )] public static var MOUSE_RETICLE:Class;
@@ -16,6 +18,9 @@ package  {
 
 // particles
 		[Embed( source = "../resc/particles/bullet_round.png" )] public static var BULLET_ROUND:Class;
+		[Embed( source = "../resc/particles/explosion.png" )] public static var IMPORT_EXPLOSION:Class;
+		[Embed( source = "../resc/particles/torpedo.png" )] public static var IMPORT_TORPEDO:Class;
+		[Embed( source = "../resc/particles/spark.png" )] public static var IMPORT_SPARK:Class;
 
 // player
 		[Embed( source = "../resc/chars/knight_body.png" )] public static var KNIGHT_BODY:Class;
@@ -33,5 +38,10 @@ package  {
 		[Embed( source = "../resc/guns/Revolver.png" )] public static var GUN_REVOLVER:Class;
 		[Embed( source = "../resc/guns/TacticalShotgun.png" )] public static var GUN_TACTICAL_SHOTGUN:Class;
 		[Embed( source = "../resc/guns/SubmachineGun.png" )] public static var GUN_SUBMACHINE_GUN:Class;
+		
+// sound
+		[Embed( source = "../resc/sound/sfx_explosion.mp3" )] public static var SOUND_EXPLOSION:Class;
+		[Embed( source = "../resc/sound/sfx_powerup.mp3" )] public static var SOUND_SCORE:Class;
+		[Embed( source = "../resc/sound/sfx_launcher.mp3" )] public static var SOUND_LAUNCHER:Class;
 	}
 }

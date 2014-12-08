@@ -25,10 +25,14 @@ package {
 		public var gun_info:FlxText = new FlxText(0, 0, 300);
 		public var ammo_info:FlxText = new FlxText(0, 0, 150);
 		
-		// in-game settings
-		public var bg:FlxSprite = new FlxSprite();
+		// groups
 		public var bullets:FlxGroup = new FlxGroup();
 		public var chars:FlxGroup = new FlxGroup();
+		public var _particles:FlxGroup = new FlxGroup();
+		public static var roadblocks:FlxGroup = new FlxGroup();
+		
+		// in-game settings
+		public var bg:FlxSprite = new FlxSprite();
 		public var player:Character;
 		public var reticle:FlxSprite = new FlxSprite();
 		
@@ -46,9 +50,19 @@ package {
 			// layer: bottom
 			add_bg();
 			
+			if (firstTime) {
+				add_roadblocks();
+				
+				// turn off after tutorial is implemented
+				firstTime = false;
+			}
+			
+			this.add(roadblocks);
+			
 			// layer: mid
 			add_chars();
 			this.add(bullets);
+			this.add(_particles);
 			
 			// layer: top
 			add_status_bar();
@@ -64,6 +78,28 @@ package {
 			bg.loadGraphic(Imports.DEFAULT_BG);
 			bg.set_position(0, 0);
 			this.add(bg);
+		}
+		
+		public function add_roadblocks():void {
+			var roadblock1:FlxSprite = new FlxSprite();
+			roadblock1.loadGraphic(Imports.ROAD_BLOCK);
+			roadblock1.set_position(Util.int_random(150, 450), Util.int_random(100, 200));
+			roadblock1.mass = 10000000;
+			
+			var roadblock2:FlxSprite = new FlxSprite();
+			roadblock2.loadGraphic(Imports.ROAD_BLOCK);
+			roadblock2.set_position(Util.int_random(150, 450), Util.int_random(400, 500));
+			roadblock2.mass = 10000000;
+			
+			var roadblock3:FlxSprite = new FlxSprite();
+			roadblock3.loadGraphic(Imports.ROAD_BLOCK_V);
+			var x3:Number = (Util.int_random(0,1) == 1) ? Util.int_random(100, 150) : Util.int_random(400, 450);
+			roadblock3.set_position(x3, Util.int_random(250, 300));
+			roadblock3.mass = 10000000;
+			
+			roadblocks.add(roadblock1);
+			roadblocks.add(roadblock2);
+			roadblocks.add(roadblock3);
 		}
 		
 		public function add_chars():void {
@@ -141,6 +177,7 @@ package {
 			
 			update_characters();
 			update_bullets();
+			update_particles();
 			
 			update_tutorial();
 			update_status_bar();
@@ -162,6 +199,33 @@ package {
 			for (var i:int = chars.members.length - 1; i >= 0; i--) {
 				var char:Character = chars.members[i] as Character;
 				char.update_character(this);
+				
+				// hit detection
+				FlxG.overlap(char.getHitBox(), bullets, function(hitbox:FlxSprite, bullet:Bullet):void {
+					char.take_damage(bullet.get_damage());
+					
+					var blood:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180, Spark.BLOOD);
+					_particles.add(blood);
+					
+					bullets.remove(bullet, true);
+				});
+				
+				FlxG.collide(char.getHitBox(), roadblocks, function(hitbox:FlxSprite, roadblock:FlxSprite):void {
+					// moving roadblock
+					if (char.player_controlled) {
+						char.moveSpeed /= 6;
+					} else {
+						char.roam(true);
+					}
+				});
+				
+				if (char.should_remove()) {
+					if (char.player_controlled) {
+						player = null;
+					}
+					
+					chars.remove(char, true);
+				}
 			}
 		}
 		
@@ -183,17 +247,29 @@ package {
 						bullets.remove(itr_bullet, true);
 					}
 				} // end of if not null
+				
+				FlxG.overlap(roadblocks, bullets, function(roadblock:FlxSprite, bullet:Bullet):void {
+					var spark:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180);
+					_particles.add(spark);
+					
+					bullets.remove(bullet, true);
+				});
+				
 			} // end of for
-			
-			// hit test
-			/*
-			FlxG.overlap(chars, bullets, function(obj:Character, bullet:Bullet):void {
-				// remove case: hit object
-				// TODO: add hit animation
-				itr_bullet.do_remove();
-				_bullets.remove(itr_bullet, true);
-			});
-			*/
+		}
+		
+		private function update_particles():void {
+			for (var i:int = _particles.members.length - 1; i >= 0; i--) {
+				var itr_bullet:Particle = _particles.members[i] as Particle;
+				if (itr_bullet != null) {	// for some odd reason, things only work if this line is added
+					itr_bullet.update_particle(this);
+					if (itr_bullet.should_remove()) {
+						// remove case: max range reached
+						itr_bullet.do_remove();
+						_particles.remove(itr_bullet, true);
+					}
+				} // end of if not null
+			} // end of for
 			
 		}
 		

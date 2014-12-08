@@ -15,7 +15,7 @@ package guns
 				orpm : 240,
 				brpm : 450,
 				damage : 15,
-				range : 180,
+				range : 150,
 				burst : -4,
 				pellets: 8,
 				mag_size : 16,

@@ -31,6 +31,7 @@ package core
 		public var hp:int;
 		public var max_hp:int = 100;
 		public var mobility:Number = 1.0;
+		public var giant:Boolean = false;		// giant characters should not be affected by roadblocks
 		
 		// health regen
 		protected var regen_rate:int = 6;		// 10 times/s
@@ -38,6 +39,14 @@ package core
 		protected var regen_wait:int = 180;		// 3s
 		protected var regen_wait_ctdown:int = 180;
 		protected var regen_ct:int = 0;
+		
+		// ai specs
+		public var rotation_spd:Number = 2;		// 120 degree / s
+		public var ai_trigger:int = 15;	// 240 RPM
+		public var aim_shoot:Boolean = false;
+		public var shoot_span:int = 60;
+		public var shoot_p:Boolean = false;
+		public var shoot_jp:Boolean = false;
 		
 		public function Character() {
 			moveSpeed = walkSpeed;
@@ -59,6 +68,10 @@ package core
 			}
 			
 			update_weapon();
+			
+			if (hp <= 0) {
+				die();
+			}
 		}
 		
 		protected function update_control():void {
@@ -206,6 +219,10 @@ package core
 			return;
 		}
 		
+		public function roam(renew:Boolean = false):Boolean {
+			return false;
+		}
+		
 		public function reloadOp():void {
 			return;
 		}
@@ -230,8 +247,28 @@ package core
 			return [];
 		}
 		
+		public function getHitBox():FlxSprite {
+			return null;
+		}
+		
+		public function gainExp1(amount:int):void {
+			return;
+		}
+		
+		public function gainExp2(amount:int):void {
+			return;
+		}
+		
+		public function die():void {
+			return;
+		}
+		
 		protected function line_up_with_muzzle(dx:Number, dy:Number):FlxPoint {
 			return new FlxPoint(dx, dy);
+		}
+		
+		public function should_remove():Boolean {
+			return false;
 		}
 	}
 

@@ -19,22 +19,28 @@ package core
 		public var w1_lv:int;	// level for weapon 1
 		public var w2_lv:int;	// level for weapon 2
 		
+		public var w1_exp:int;
+		public var w2_exp:int;
+		
 		/*
 		private const weaponMapping:Object = { w1: ["Revolver", "Marksman Rifle", "Assualt Rifle"],
 												w2: ["Handgun", "Machine Pistol", "Submachine Gun"]};
 												*/
-		public const weaponMapping:Array = [["Assualt Rifle", "Marksman Rifle", "Revolver"],
+		public const weaponMapping:Array = [["Assualt Rifle", "Revolver", "Marksman Rifle"],
 											["Double Barrel", "Handgun", "Submachine Gun"]];
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
 		public static var ammunition:Array = [ { mag: 1, ammo: 1 }, { mag: 1, ammo: 1 } ];
 		public static var init:Boolean = false;
 		
-		protected var exp:Array = [[100, 200], [100, 200]];
+		public var dead:Boolean = false;
 		
-		// ai specs
-		public var ai_trigger:int = 3;	// 1200 RPM
-		public var aim_before_shoot:Boolean = false;
+		protected var exp:Array = [[100, 200, false], [100, 200, false]];
+		
+		// ai specs: more in super class
+		private var _ct:int = 0;
+		private var step:int = 0;
+		public var waypoint:FlxPoint;
 		
 		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
@@ -44,14 +50,15 @@ package core
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 200;
-			
+			w1_exp = 0;
+			w2_exp = 0;
 			
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
 				w1_lv = Util.int_random(0, 2);
 				w2_lv = Util.int_random(0, 2);
+				shoot_span = Util.int_random(45, 75);
 			}
-			
 			
 			body.loadGraphic(Imports.KNIGHT_BODY);
 			
@@ -62,7 +69,7 @@ package core
 			limbs.addAnimation("reload_pistol", Util.consecutive_num(15, 19), 10, false);
 			
 			hitbox.loadGraphic(Imports.IMPORT_HITBOX_25x30);
-			hitbox.alpha = 0.5;
+			hitbox.alpha = 0.3;
 			hitbox.visible = false;
 			
 			if (!init) {
@@ -120,11 +127,6 @@ package core
 			} else {
 				weapon.update_emitter(_g, this);
 			}
-			/*
-			// update weapon status to game engine
-			_g.ammunition[weaponSlot].mag = weapon.mag;
-			_g.ammunition[weaponSlot].ammo = weapon.ammo;
-			*/
 		}
 		
 		protected function update_mobility():void {
@@ -141,11 +143,70 @@ package core
 			}
 			
 			if (_g.player == null) {
-				// roam?
+				roam();
+				return;
 			}
 			
+			var player:Character = _g.player;
+			stance = "hip";
+			
 			// update AI
-			// _g.debug_text.text = weapon.ammo + "";
+			switch(step) {
+				case 0:
+					// roam to a new position
+					var reached:Boolean = roam();
+					if (reached) {
+						step++;
+					}
+					break;
+					
+				case 1:
+					// aim to player: temporarily non-constant-speed rotation
+					var goal_angle:Number = Math.atan2(player.y() - this.y(), player.x() - this.x()) * Util.RAD2DEG;
+					var err:Number = ang - goal_angle;
+					var err_tol:Number = rotation_spd * 1.2;
+					
+					if (Math.abs(err) <= err_tol) {
+						// aimed successfully
+						_g.debug_text.text = "aimed successfully";
+						step++;
+					} else {
+						if (err >= 270) {
+							ang = ang - 360;
+						} else if (err <= -270 ) {
+							ang = ang + 360;
+						}
+						var dtheta:Number = (goal_angle - ang) / 10;
+						ang += dtheta;
+					}
+					update_position();
+					break;
+					
+				case 2:
+					// shoot for some while
+					_g.debug_text.text = "shooting";
+					_ct++;
+					if (_ct <= shoot_span) {
+						shoot_p = true;
+						if (_ct % ai_trigger == 0) {
+							shoot_jp = true;
+						} else {
+							shoot_jp = false;
+						}
+					} else {
+						shoot_p = false;
+						shoot_jp = false;
+						
+						_ct = 0;
+						step = 0;
+					}
+					
+					break;
+					
+				default:
+					step = 0;
+					break;
+			}
 		}
 		
 		override public function weapon_control():void {
@@ -174,16 +235,55 @@ package core
 			return weapon;
 		}
 		
-		// returns array of two weapons' stat currently mapped to
-		/*
-		override public function getWeaponMapStat():Array {
-			var name1:String = weaponMapping[0][w1_lv];
-			var name2:String = weaponMapping[1][w2_lv];
-			var obj1:Object = Util.weapon_map_emitter(name1).gunstat;
-			var obj2:Object = Util.weapon_map_emitter(name2).gunstat;
-			return [obj1, obj2];
+		// set up a random goal position, walk to it and returns whether the destination has been reached
+		override public function roam(renew:Boolean = false):Boolean {
+			_g.debug_text.text = "roaming";
+			
+			if (renew) {
+				waypoint = null;
+			}
+			
+			shoot_p = false;
+			shoot_jp = false;
+			
+			if (waypoint == null) {
+				// make new waypoint
+				waypoint = new FlxPoint(Util.int_random(100, 540), Util.int_random(100, 540));
+				return false;
+			} else {
+				_ct++;
+				
+				var goal_angle:Number = Math.atan2(waypoint.y - this.y(), waypoint.x - this.x()) * Util.RAD2DEG;
+				var err:Number = ang - goal_angle;
+				var err_tol:Number = rotation_spd * 1.2;
+				
+				if (Math.abs(err) > err_tol) {
+					if (err > 0) {
+						// ang > goal_angle
+						ang -= rotation_spd;
+					} else {
+						ang += rotation_spd;
+					}
+				}
+				
+				goal_angle = goal_angle * Util.DEG2RAD;
+				var vx:Number = Math.cos(goal_angle) * moveSpeed;
+				var vy:Number = Math.sin(goal_angle) * moveSpeed;
+				this.x(vx);
+				this.y(vy);
+				
+				err = Util.point_dist(waypoint.x, waypoint.y, this.x(), this.y());
+				err_tol = 5;
+				
+				if (err <= err_tol || _ct > 300 ) {
+					_ct = 0;
+					waypoint = null;
+					return true;
+				} else {
+					return false;
+				}
+			}
 		}
-		*/
 		
 		override protected function line_up_with_muzzle(dx:Number, dy:Number):FlxPoint {
 			var wo_x:Number = weapon_offset.x;
@@ -253,6 +353,42 @@ package core
 		override public function reloadOp():void {
 			reloading = true;
 			limbs.play("reload_" + weapon.type);
+		}
+		
+		override public function getHitBox():FlxSprite {
+			return hitbox;
+		}
+		
+		override public function die():void {
+			// spawn a corpse on stage
+			
+			if (!player_controlled) {
+				// randomly spawn a weapon upgrade
+				var r:Number = Util.float_random(0, 100);
+				if (r > 90) {
+					// weapon 1 upgrade
+				} else if (r < 10) {
+					// weapon 2 upgrade
+				}
+			}
+			
+			dead = true;
+		}
+		
+		public function gainExp1(amount:int):void {
+			w1_exp += amount;
+			if (exp[0][w1_lv] && w1_exp > exp[0][w1_lv]) {
+				// upgrade!
+				
+			}
+		}
+		
+		public function gainExp2(amount:int):void {
+			return;
+		}
+		
+		override public function should_remove():Boolean {
+			return dead;
 		}
 	}
 
