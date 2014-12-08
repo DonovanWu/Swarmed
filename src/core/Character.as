@@ -158,15 +158,7 @@ package core
 		}
 		
 		protected function update_ai():void {
-			if (_g == null) {
-				return;
-			}
-			
-			if (_g.player == null) {
-				// roam?
-			}
-			
-			// update AI
+			return;
 		}
 		
 		protected function update_health_regen():void {

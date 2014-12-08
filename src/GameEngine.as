@@ -49,6 +49,7 @@ package {
 		public var timer:int = 0;
 		public var kills:int = 0;
 		public var spawn_wait:int = 300;	// 600?
+		public const MAX_ENEMY_ONSTAGE:int = 20;
 		
 		override public function create():void {
 			super.create();
@@ -112,11 +113,13 @@ package {
 		}
 		
 		public function add_chars():void {
+			
 			var knight1:Knight = new Knight(320, 320, progress.knight[0], progress.knight[1], true);
 			chars.add(knight1);
 			
+			
 			// test object
-			var knight2:Knight = new Knight(80, 320, progress.knight[0], progress.knight[1]);
+			var knight2:Knight = new Knight(80, 320);
 			chars.add(knight2);
 			
 			this.add(chars);
@@ -185,8 +188,6 @@ package {
 			*/
 			timer++;
 			
-			spawn_chars();
-			
 			update_characters();
 			update_bullets();
 			update_particles();
@@ -195,17 +196,19 @@ package {
 			update_status_bar();
 			
 			update_reticle();
+			
+			// spawn_chars();
 		}
 		
 		private function spawn_chars():void {
-			if (timer % spawn_wait == spawn_wait - 1) {
+			if (timer % spawn_wait == 0 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
 				var r:Number = 640 * Math.sqrt(2) / 2;
 				var thetha:Number = Util.float_random(0, 6.28);
 				
 				var x:Number = r * Math.cos(thetha);
 				var y:Number = r * Math.sin(thetha);
 				
-				var knight:Knight = new Knight(x, y, progress.knight[0], progress.knight[1]);
+				var knight:Knight = new Knight(x, y);
 				chars.add(knight);
 			}
 		}
@@ -222,52 +225,54 @@ package {
 		
 		private function update_characters():void {
 			for (var i:int = chars.members.length - 1; i >= 0; i--) {
-				var char:Character = chars.members[i] as Character;
-				char.update_character(this);
-				
-				// hit detection
-				FlxG.overlap(char.getHitBox(), bullets, function(hitbox:FlxSprite, bullet:Bullet):void {
-					char.take_damage(bullet.get_damage());
+				var char:Character = chars.members[i];
+				if (char != null) {
+					char.update_character(this);
 					
-					var blood:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180, Spark.BLOOD);
-					_particles.add(blood);
-					
-					bullets.remove(bullet, true);
-				});
-				
-				FlxG.collide(char.getHitBox(), roadblocks, function(hitbox:FlxSprite, roadblock:FlxSprite):void {
-					// moving roadblock
-					if (char.player_controlled) {
-						char.moveSpeed /= 3;
-					} else {
-						char.roam(true);
-					}
-				});
-				
-				if (char.player_controlled) {
-					FlxG.overlap(char.getHitBox(), packets, function (hitbox:FlxSprite, item:Packet):void {
-						char.gainExp(item.getAmount(), int(item.frame))
-						packets.remove(item);
+					// hit detection
+					FlxG.overlap(char.getHitBox(), bullets, function(hitbox:FlxSprite, bullet:Bullet):void {
+						char.take_damage(bullet.get_damage());
+						
+						var blood:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180, Spark.BLOOD);
+						_particles.add(blood);
+						
+						bullets.remove(bullet, true);
 					});
-				}
-				
-				if (char.should_remove()) {
-					kills++;
+					
+					FlxG.collide(char.getHitBox(), roadblocks, function(hitbox:FlxSprite, roadblock:FlxSprite):void {
+						// moving roadblock
+						if (char.player_controlled) {
+							char.moveSpeed /= 3;
+						} else {
+							char.roam(true);
+						}
+					});
 					
 					if (char.player_controlled) {
-						player = null;
-						kills--;
-						// gameover!
+						FlxG.overlap(char.getHitBox(), packets, function (hitbox:FlxSprite, item:Packet):void {
+							char.gainExp(item.getAmount(), int(item.frame))
+							packets.remove(item);
+						});
 					}
 					
-					chars.remove(char, true);
+					if (char.should_remove()) {
+						kills++;
+						
+						if (char.player_controlled) {
+							player = null;
+							kills--;
+							// gameover!
+						}
+						
+						chars.remove(char, true);
+					}
 				}
 			}
 		}
 		
 		private function update_bullets():void {
 			for (var i:int = bullets.members.length - 1; i >= 0; i--) {
-				var itr_bullet:Bullet = bullets.members[i] as Bullet;
+				var itr_bullet:Bullet = bullets.members[i];
 				if (itr_bullet != null) {	// for some odd reason, things only work if this line is added
 					itr_bullet.update_bullet(this);
 					if (itr_bullet.should_remove()) {
@@ -296,7 +301,7 @@ package {
 		
 		private function update_particles():void {
 			for (var i:int = _particles.members.length - 1; i >= 0; i--) {
-				var itr_bullet:Particle = _particles.members[i] as Particle;
+				var itr_bullet:Particle = _particles.members[i];
 				if (itr_bullet != null) {	// for some odd reason, things only work if this line is added
 					itr_bullet.update_particle(this);
 					if (itr_bullet.should_remove()) {
@@ -323,6 +328,17 @@ package {
 				gun_info.text = "gun: " + gun_text;
 				ammo_info.text = "ammo: " + ammo_text;
 			}
+		}
+		
+		// an experimental function to solve lag issue
+		private function get_player():Character {
+			for (var i:int = 0; i < chars.members.length; i++ ) {
+				var itr_char:Character = chars.members[i] as Character;
+				if (itr_char.player_controlled) {
+					return itr_char;
+				}
+			}
+			return null;
 		}
 	}
 	

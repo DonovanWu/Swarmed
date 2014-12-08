@@ -4,7 +4,7 @@ package core
 	import guns.*;
 	import org.flixel.*;
 	/**
-	 * This character can be only player-controlled
+	 * 
 	 * @author Wenrui (Donovan) Wu
 	 */
 	public class Knight extends Character
@@ -30,8 +30,8 @@ package core
 											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
-		public static var ammunition:Array = [ { mag: 1, ammo: 1 }, { mag: 1, ammo: 1 } ];
-		public static var init:Boolean = false;
+		public var ammunition:Array = [ { mag: 1, ammo: 1 }, { mag: 1, ammo: 1 } ];
+		public var init:Boolean = false;
 		
 		public var dead:Boolean = false;
 		
@@ -40,6 +40,7 @@ package core
 		// ai specs: more in super class
 		private var _ct:int = 0;
 		private var step:int = 0;
+		private var wait:int = -1;
 		public var waypoint:FlxPoint;
 		
 		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
@@ -85,6 +86,8 @@ package core
 			// super code:
 			moveSpeed = walkSpeed;
 			hp = max_hp;
+			
+			
 		}
 		
 		protected function add_weapons():void {
@@ -148,6 +151,8 @@ package core
 			var player:Character = _g.player;
 			stance = "hip";
 			
+			// _g.debug_text.text = step + "";
+			
 			// update AI
 			switch(step) {
 				case 0:
@@ -182,7 +187,6 @@ package core
 					
 				case 2:
 					// shoot for some while
-					// _g.debug_text.text = "shooting";
 					_ct++;
 					if (_ct <= shoot_span) {
 						shoot_p = true;
@@ -194,10 +198,39 @@ package core
 					} else {
 						shoot_p = false;
 						shoot_jp = false;
+						shoot_span += 3;
 						
 						_ct = 0;
-						step = 0;
+						step = 3;
 					}
+					
+					// _g.debug_text.text = _ct + "";
+					
+					break;
+					
+				case 3:
+					// choose to rest for a random while
+					if (wait < 0) {
+						// initialize wait
+						wait = Util.int_random(0, 4) * 20;
+					}
+					
+					_ct++;
+					if (_ct >= shoot_span) {
+						_ct = 0;
+						wait = -1;
+						step++;
+					}
+					break;
+					
+				case 4:
+					// randomly choose to switch gun
+					var choice:int = Util.int_random(0, 3);
+					if (choice == 0) {
+						weaponSlot = 1 - weaponSlot;
+						switch_weapon();
+					}
+					step++;
 					
 					break;
 					
