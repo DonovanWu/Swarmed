@@ -24,7 +24,7 @@ package core
 												w2: ["Handgun", "Machine Pistol", "Submachine Gun"]};
 												*/
 		public const weaponMapping:Array = [["Assualt Rifle", "Marksman Rifle", "Revolver"],
-											["Machine Pistol", "Handgun", "Submachine Gun"]];
+											["Double Barrel", "Handgun", "Submachine Gun"]];
 		
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
@@ -37,6 +37,10 @@ package core
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 200;
+			if (!player_controlled) {
+				w1_lv = Util.int_random(0, 2);
+				w2_lv = Util.int_random(0, 2);
+			}
 			
 			body.loadGraphic(Imports.KNIGHT_BODY);
 			
@@ -115,6 +119,18 @@ package core
 			}
 		}
 		
+		override protected function update_ai():void {
+			if (_g == null) {
+				return;
+			}
+			
+			if (_g.player == null) {
+				// roam?
+			}
+			
+			// update AI
+		}
+		
 		override public function weapon_control():void {
 			if (Util.is_key(Util.WEAPON_SWITCH, true) && !reloading) {
 				var index:int = Util.key_index(Util.WEAPON_SWITCH);
@@ -137,12 +153,8 @@ package core
 		
 		// returns array of two weapons' stat currently mapped to
 		override public function getWeaponMapStat():Array {
-			/*
 			var name1:String = weaponMapping[0][w1_lv];
 			var name2:String = weaponMapping[1][w2_lv];
-			*/
-			var name1:String = "Assualt Rifle";
-			var name2:String = "Machine Pistol";
 			var obj1:Object = Util.weapon_map_emitter(name1).gunstat;
 			var obj2:Object = Util.weapon_map_emitter(name2).gunstat;
 			return [obj1, obj2];

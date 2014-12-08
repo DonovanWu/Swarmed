@@ -18,7 +18,8 @@ package guns
 				pellets: 1,
 				mag_size : 1,
 				ammo: 5,
-				spread : { hip : 0, aim : 0 }
+				spread : { hip : 0, aim : 0 },
+				spawn : "rocket"
 			});
 		}
 	}

@@ -67,8 +67,12 @@ package {
 		}
 		
 		public function add_chars():void {
-			var knight:Knight = new Knight(320, 320, progress.knight[0], progress.knight[1], true);
-			chars.add(knight);
+			var knight1:Knight = new Knight(320, 320, progress.knight[0], progress.knight[1], true);
+			chars.add(knight1);
+			
+			// test object
+			var knight2:Knight = new Knight(80, 320, progress.knight[0], progress.knight[1]);
+			chars.add(knight2);
 			
 			this.add(chars);
 		}

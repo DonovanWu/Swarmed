@@ -43,12 +43,13 @@ package  {
 		public static const RAD2DEG:Number = 180 / Math.PI;
 		public static const DEG2RAD:Number = Math.PI / 180;
 		
+		// returns a random float f s.t. min<= f < max
 		public static function float_random(min:Number, max:Number):Number {
 			return min + Math.random() * (max - min);
 		}
 		
 		public static function int_random(min:int, max:int):int {
-			return Math.floor(float_random(min,max)) as int;
+			return Math.floor(float_random(min,max+1)) as int;
 		}
 		
 		public static function is_key(k:Vector.<String>,jp:Boolean=false):Boolean {

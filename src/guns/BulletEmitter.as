@@ -113,7 +113,7 @@ package guns
 			
 			if (ct_burst >= Math.abs(burst) && ct_brpm >= brpm) ct_burst = 0;
 			
-			if (mag <= 0) {
+			if (mag <= 0 && backup_ammo() > 0) {
 				_ch.reloadOp();
 			}
 		}
@@ -185,7 +185,7 @@ package guns
 		}
 		
 		public function needReload():Boolean {
-			return mag != mag_size;
+			return mag != mag_size && backup_ammo() > 0;
 		}
 		
 		public function reload():void {
