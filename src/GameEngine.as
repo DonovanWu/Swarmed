@@ -6,6 +6,7 @@ package {
 	
 	import core.*;
 	import flash.display.*;
+	import gameobj.*;
 	import guns.*;
 	import misc.FlxGroupSprite;
 	import org.flixel.*;
@@ -30,6 +31,8 @@ package {
 		public var chars:FlxGroup = new FlxGroup();
 		public var _particles:FlxGroup = new FlxGroup();
 		public static var roadblocks:FlxGroup = new FlxGroup();
+		public var packets:FlxGroup = new FlxGroup();
+		public static var corpses:FlxGroup = new FlxGroup(50);
 		
 		// in-game settings
 		public var bg:FlxSprite = new FlxSprite();
@@ -40,15 +43,20 @@ package {
 		public static var progress:Object = { knight:[0, 0], vanguard:[0, 0] };
 		public var ammunition:Array = [{ mag:1, ammo:1 }, { mag:1, ammo:1 }];
 		
-		// special
+		// game mechanics
 		public var debug_text:FlxText = new FlxText(0, 0, 320);
 		public var gameStart:Boolean = false;
+		public var timer:int = 0;
+		public var kills:int = 0;
+		public var spawn_wait:int = 300;	// 600?
 		
 		override public function create():void {
 			super.create();
 			
 			// layer: bottom
 			add_bg();
+			
+			this.add(corpses);
 			
 			if (firstTime) {
 				add_roadblocks();
@@ -60,6 +68,7 @@ package {
 			this.add(roadblocks);
 			
 			// layer: mid
+			this.add(packets);
 			add_chars();
 			this.add(bullets);
 			this.add(_particles);
@@ -174,6 +183,9 @@ package {
 				gameStart = true;
 			}
 			*/
+			timer++;
+			
+			spawn_chars();
 			
 			update_characters();
 			update_bullets();
@@ -183,6 +195,19 @@ package {
 			update_status_bar();
 			
 			update_reticle();
+		}
+		
+		private function spawn_chars():void {
+			if (timer % spawn_wait == spawn_wait - 1) {
+				var r:Number = 640 * Math.sqrt(2) / 2;
+				var thetha:Number = Util.float_random(0, 6.28);
+				
+				var x:Number = r * Math.cos(thetha);
+				var y:Number = r * Math.sin(thetha);
+				
+				var knight:Knight = new Knight(x, y, progress.knight[0], progress.knight[1]);
+				chars.add(knight);
+			}
 		}
 		
 		private function update_tutorial():void {
@@ -213,15 +238,26 @@ package {
 				FlxG.collide(char.getHitBox(), roadblocks, function(hitbox:FlxSprite, roadblock:FlxSprite):void {
 					// moving roadblock
 					if (char.player_controlled) {
-						char.moveSpeed /= 6;
+						char.moveSpeed /= 3;
 					} else {
 						char.roam(true);
 					}
 				});
 				
+				if (char.player_controlled) {
+					FlxG.overlap(char.getHitBox(), packets, function (hitbox:FlxSprite, item:Packet):void {
+						char.gainExp(item.getAmount(), int(item.frame))
+						packets.remove(item);
+					});
+				}
+				
 				if (char.should_remove()) {
+					kills++;
+					
 					if (char.player_controlled) {
 						player = null;
+						kills--;
+						// gameover!
 					}
 					
 					chars.remove(char, true);
@@ -288,7 +324,6 @@ package {
 				ammo_info.text = "ammo: " + ammo_text;
 			}
 		}
-		
 	}
 	
 }

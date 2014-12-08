@@ -8,6 +8,7 @@ package  {
 		[Embed( source = "../resc/hitbox_25x30.png" )] public static var IMPORT_HITBOX_25x30:Class;
 		[Embed( source = "../resc/roadblock.jpg" )] public static var ROAD_BLOCK:Class;
 		[Embed( source = "../resc/roadblock_v.jpg" )] public static var ROAD_BLOCK_V:Class;
+		[Embed( source = "../resc/packets.png" )] public static var IMPORT_PACKETS:Class;
 		
 // accessories
 		[Embed( source = "../resc/reticle.png" )] public static var MOUSE_RETICLE:Class;

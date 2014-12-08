@@ -1,5 +1,6 @@
 package core 
 {
+	import gameobj.Packet;
 	import guns.*;
 	import org.flixel.*;
 	/**
@@ -19,15 +20,14 @@ package core
 		public var w1_lv:int;	// level for weapon 1
 		public var w2_lv:int;	// level for weapon 2
 		
-		public var w1_exp:int;
-		public var w2_exp:int;
-		
+		public const weaponMapping:Object = [["Revolver", "Marksman Rifle", "Assualt Rifle"],
+											["Handgun", "Machine Pistol", "Submachine Gun"]];
+											
 		/*
-		private const weaponMapping:Object = { w1: ["Revolver", "Marksman Rifle", "Assualt Rifle"],
-												w2: ["Handgun", "Machine Pistol", "Submachine Gun"]};
-												*/
 		public const weaponMapping:Array = [["Assualt Rifle", "Revolver", "Marksman Rifle"],
 											["Double Barrel", "Handgun", "Submachine Gun"]];
+											*/
+											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
 		public static var ammunition:Array = [ { mag: 1, ammo: 1 }, { mag: 1, ammo: 1 } ];
@@ -50,8 +50,6 @@ package core
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 200;
-			w1_exp = 0;
-			w2_exp = 0;
 			
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
@@ -164,11 +162,11 @@ package core
 					// aim to player: temporarily non-constant-speed rotation
 					var goal_angle:Number = Math.atan2(player.y() - this.y(), player.x() - this.x()) * Util.RAD2DEG;
 					var err:Number = ang - goal_angle;
-					var err_tol:Number = rotation_spd * 1.2;
+					var err_tol:Number = rotation_spd * 1.5;
 					
 					if (Math.abs(err) <= err_tol) {
 						// aimed successfully
-						_g.debug_text.text = "aimed successfully";
+						// _g.debug_text.text = "aimed successfully";
 						step++;
 					} else {
 						if (err >= 270) {
@@ -184,7 +182,7 @@ package core
 					
 				case 2:
 					// shoot for some while
-					_g.debug_text.text = "shooting";
+					// _g.debug_text.text = "shooting";
 					_ct++;
 					if (_ct <= shoot_span) {
 						shoot_p = true;
@@ -237,7 +235,7 @@ package core
 		
 		// set up a random goal position, walk to it and returns whether the destination has been reached
 		override public function roam(renew:Boolean = false):Boolean {
-			_g.debug_text.text = "roaming";
+			// _g.debug_text.text = "roaming";
 			
 			if (renew) {
 				waypoint = null;
@@ -255,7 +253,7 @@ package core
 				
 				var goal_angle:Number = Math.atan2(waypoint.y - this.y(), waypoint.x - this.x()) * Util.RAD2DEG;
 				var err:Number = ang - goal_angle;
-				var err_tol:Number = rotation_spd * 1.2;
+				var err_tol:Number = rotation_spd * 1.5;
 				
 				if (Math.abs(err) > err_tol) {
 					if (err > 0) {
@@ -365,26 +363,42 @@ package core
 			if (!player_controlled) {
 				// randomly spawn a weapon upgrade
 				var r:Number = Util.float_random(0, 100);
-				if (r > 90) {
+				if (r > 50) {
 					// weapon 1 upgrade
-				} else if (r < 10) {
+					_g.packets.add(new Packet(this.x(), this.y(), 0));
+				} else if (r < 50) {
 					// weapon 2 upgrade
+					_g.packets.add(new Packet(this.x(), this.y(), 1));
 				}
 			}
 			
 			dead = true;
 		}
 		
-		public function gainExp1(amount:int):void {
-			w1_exp += amount;
-			if (exp[0][w1_lv] && w1_exp > exp[0][w1_lv]) {
-				// upgrade!
-				
+		override public function gainExp(amount:int, which:int):void {
+			_g.debug_text.text = "xp gained!"
+			
+			var w_lv:int = 0;
+			if (which == 0) {
+				w_lv = w1_lv;
+			} else {
+				w_lv = w2_lv;
 			}
-		}
-		
-		public function gainExp2(amount:int):void {
-			return;
+			
+			if (exp[which][w_lv]) {
+				exp[which][w_lv] -= amount;
+				
+				if (exp[which][w_lv] <= 0) {
+					// upgrade!
+					if (which == 0) {
+						w1_lv++;
+					} else {
+						w2_lv++;
+					}
+					weaponSlot = which;
+					switch_weapon();
+				}
+			}
 		}
 		
 		override public function should_remove():Boolean {

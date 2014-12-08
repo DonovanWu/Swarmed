@@ -238,6 +238,13 @@ package guns
 			
 			ammo = n_ammo;
 		}
+		
+		public function replenishAmmo(amount:int):void {
+			ammo += amount;
+			if (ammo > gunstat.ammo) {
+				ammo = gunstat.ammo;
+			}
+		}
 	}
 
 }

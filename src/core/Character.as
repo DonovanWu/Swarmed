@@ -251,11 +251,7 @@ package core
 			return null;
 		}
 		
-		public function gainExp1(amount:int):void {
-			return;
-		}
-		
-		public function gainExp2(amount:int):void {
+		public function gainExp(amount:int, which:int):void {
 			return;
 		}
 		
