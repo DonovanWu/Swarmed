@@ -2,7 +2,6 @@ package core
 {
 	import guns.AssualtRifle;
 	import guns.BulletEmitter;
-	import misc.DamageGraph;
 	import misc.FlxGroupSprite;
 	import org.flixel.*;
 	/**
@@ -33,6 +32,13 @@ package core
 		public var max_hp:int = 100;
 		public var mobility:Number = 1.0;
 		
+		// health regen
+		protected var regen_rate:int = 6;		// 10 times/s
+		protected var regen_amount:int = 3;		// 30 /s
+		protected var regen_wait:int = 180;		// 3s
+		protected var regen_wait_ctdown:int = 180;
+		protected var regen_ct:int = 0;
+		
 		public function Character() {
 			moveSpeed = walkSpeed;
 			hp = max_hp;
@@ -46,7 +52,9 @@ package core
 			// update position
 			if (player_controlled) {
 				update_control();
+				update_health_regen();
 			} else {
+				// ai has no health regen!
 				update_ai();
 			}
 			
@@ -146,6 +154,44 @@ package core
 			}
 			
 			// update AI
+		}
+		
+		protected function update_health_regen():void {
+			if (hp < max_hp && hp > 0) {
+				// start wait timer
+				if (regen_wait_ctdown > 0) {
+					regen_wait_ctdown--;
+				} else {
+					// regen wait count down reached!
+					if (regen_ct % regen_rate == 0) {
+						regain_health(regen_amount);
+					}
+					regen_ct++;
+				}
+			} else {
+				// practically: hp = max_hp or hp = 0
+				reset_regen_timer();
+			}
+		}
+		
+		public function take_damage(pt:int):void {
+			reset_regen_timer();
+			hp -= pt;
+			if (hp < 0) {
+				hp = 0;
+			}
+		}
+		
+		public function regain_health(pt:int):void {
+			hp += pt;
+			if (hp > max_hp) {
+				hp = max_hp;
+			}
+		}
+		
+		protected function reset_regen_timer():void {
+			regen_wait_ctdown = regen_wait;
+			regen_ct = 0;
 		}
 		
 		/*

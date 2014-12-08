@@ -48,6 +48,7 @@ package  {
 			return min + Math.random() * (max - min);
 		}
 		
+		// returns a random int i s.t. min <= i <= max
 		public static function int_random(min:int, max:int):int {
 			return Math.floor(float_random(min,max+1)) as int;
 		}

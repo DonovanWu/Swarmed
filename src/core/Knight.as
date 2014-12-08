@@ -25,9 +25,16 @@ package core
 												*/
 		public const weaponMapping:Array = [["Assualt Rifle", "Marksman Rifle", "Revolver"],
 											["Double Barrel", "Handgun", "Submachine Gun"]];
-		
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
+		public static var ammunition:Array = [ { mag: 1, ammo: 1 }, { mag: 1, ammo: 1 } ];
+		public static var init:Boolean = false;
+		
+		protected var exp:Array = [[100, 200], [100, 200]];
+		
+		// ai specs
+		public var ai_trigger:int = 3;	// 1200 RPM
+		public var aim_before_shoot:Boolean = false;
 		
 		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
@@ -37,10 +44,14 @@ package core
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 200;
+			
+			
 			if (!player_controlled) {
+				// if it is AI, then pick a random gun
 				w1_lv = Util.int_random(0, 2);
 				w2_lv = Util.int_random(0, 2);
 			}
+			
 			
 			body.loadGraphic(Imports.KNIGHT_BODY);
 			
@@ -53,6 +64,11 @@ package core
 			hitbox.loadGraphic(Imports.IMPORT_HITBOX_25x30);
 			hitbox.alpha = 0.5;
 			hitbox.visible = false;
+			
+			if (!init) {
+				init_ammunition();
+				init = true;
+			}
 			
 			this.add(limbs);
 			add_weapons();
@@ -129,6 +145,7 @@ package core
 			}
 			
 			// update AI
+			// _g.debug_text.text = weapon.ammo + "";
 		}
 		
 		override public function weapon_control():void {
@@ -136,6 +153,7 @@ package core
 				var index:int = Util.key_index(Util.WEAPON_SWITCH);
 				
 				if (index != weaponSlot) {
+					update_ammunition();
 					weaponSlot = index;
 					switch_weapon();
 				}
@@ -147,11 +165,17 @@ package core
 			}
 		}
 		
+		protected function update_ammunition():void {
+			ammunition[weaponSlot].mag = weapon.mag;
+			ammunition[weaponSlot].ammo = weapon.ammo;
+		}
+		
 		override public function getWeapon():BulletEmitter {
 			return weapon;
 		}
 		
 		// returns array of two weapons' stat currently mapped to
+		/*
 		override public function getWeaponMapStat():Array {
 			var name1:String = weaponMapping[0][w1_lv];
 			var name2:String = weaponMapping[1][w2_lv];
@@ -159,6 +183,7 @@ package core
 			var obj2:Object = Util.weapon_map_emitter(name2).gunstat;
 			return [obj1, obj2];
 		}
+		*/
 		
 		override protected function line_up_with_muzzle(dx:Number, dy:Number):FlxPoint {
 			var wo_x:Number = weapon_offset.x;
@@ -192,6 +217,7 @@ package core
 			}
 			
 			weapon = Util.weapon_map_emitter(name);
+			weapon.setAmmo(ammunition[weaponSlot].ammo, ammunition[weaponSlot].mag);
 			
 			/*
 			var ammunition:Object = _g.ammunition[weaponSlot];
@@ -209,6 +235,19 @@ package core
 				weapon_offset = weapon_offset.make(25, 6);
 				limbs.frame = 1;
 			}
+		}
+		
+		protected function init_ammunition():void {
+			var name1:String = weaponMapping[0][w1_lv];
+			var name2:String = weaponMapping[1][w2_lv];
+			
+			var weapon1:BulletEmitter = Util.weapon_map_emitter(name1);
+			var	weapon2:BulletEmitter = Util.weapon_map_emitter(name2);
+			
+			ammunition[0].mag = weapon1.gunstat.mag_size;
+			ammunition[0].ammo = weapon1.gunstat.ammo;
+			ammunition[1].mag = weapon2.gunstat.mag_size;
+			ammunition[1].ammo = weapon2.gunstat.ammo;
 		}
 		
 		override public function reloadOp():void {
