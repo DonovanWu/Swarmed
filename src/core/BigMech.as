@@ -65,7 +65,7 @@ package core
 			
 			hitbox.loadGraphic(Imports.IMPORT_HITBOX_80x80);
 			hitbox.alpha = 0.3;
-			// hitbox.visible = false;
+			hitbox.visible = false;
 			
 			if (!init) {
 				init_ammunition();
