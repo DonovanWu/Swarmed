@@ -6,9 +6,11 @@ package  {
 	public class Imports {
 		
 		[Embed( source = "../resc/hitbox_25x30.png" )] public static var IMPORT_HITBOX_25x30:Class;
+		[Embed( source = "../resc/hitbox_80x80.png" )] public static var IMPORT_HITBOX_80x80:Class;
 		[Embed( source = "../resc/roadblock.jpg" )] public static var ROAD_BLOCK:Class;
 		[Embed( source = "../resc/roadblock_v.jpg" )] public static var ROAD_BLOCK_V:Class;
 		[Embed( source = "../resc/packets.png" )] public static var IMPORT_PACKETS:Class;
+		[Embed( source = "../resc/title.png" )] public static var IMPORT_TITLE:Class;
 		
 // accessories
 		[Embed( source = "../resc/reticle.png" )] public static var MOUSE_RETICLE:Class;
@@ -22,10 +24,16 @@ package  {
 		[Embed( source = "../resc/particles/explosion.png" )] public static var IMPORT_EXPLOSION:Class;
 		[Embed( source = "../resc/particles/torpedo.png" )] public static var IMPORT_TORPEDO:Class;
 		[Embed( source = "../resc/particles/spark.png" )] public static var IMPORT_SPARK:Class;
+		[Embed( source = "../resc/bubble.png" )] public static var IMPORT_BUBBLE:Class;
 
 // player
 		[Embed( source = "../resc/chars/knight_body.png" )] public static var KNIGHT_BODY:Class;
 		[Embed( source = "../resc/chars/knight_limbs.png" )] public static var KNIGHT_LIMBS:Class;
+		[Embed( source = "../resc/chars/vanguard_body.png" )] public static var VANGUARD_BODY:Class;
+		[Embed( source = "../resc/chars/BigMech.png" )] public static var BIGMECH_BODY:Class;
+		[Embed( source = "../resc/chars/knight_corpse.png" )] public static var KNIGHT_CORPSE:Class;
+		[Embed( source = "../resc/chars/vanguard_corpse.png" )] public static var VANGUARD_CORPSE:Class;
+		[Embed( source = "../resc/chars/BigMechCorpse.png" )] public static var BIGMECH_CORPSE:Class;
 		
 // weapon sprites
 		[Embed( source = "../resc/guns/AssaultRifle.png" )] public static var GUN_ASSAULT_RIFLE:Class;
@@ -44,5 +52,6 @@ package  {
 		[Embed( source = "../resc/sound/sfx_explosion.mp3" )] public static var SOUND_EXPLOSION:Class;
 		[Embed( source = "../resc/sound/sfx_powerup.mp3" )] public static var SOUND_SCORE:Class;
 		[Embed( source = "../resc/sound/sfx_launcher.mp3" )] public static var SOUND_LAUNCHER:Class;
+		[Embed( source = "../resc/sound/shoot3.mp3" )] public static var SOUND_SHOOT_3:Class;
 	}
 }

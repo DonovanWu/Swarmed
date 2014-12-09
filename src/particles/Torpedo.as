@@ -2,6 +2,7 @@ package particles
 {
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
+	import org.flixel.FlxG;
 	/**
 	 * ...
 	 * @author Wenrui Wu
@@ -25,14 +26,20 @@ package particles
 			
 			this.angle = ang;
 			
-			_ang = (Util.random_float(0, 2) <= 1) ? -0.1:0.1;
+			this._distance = 0;
+			this._range = 1200;
+			this._damage = 200;
+			
+			this.origin.x = 0;
+			
+			_ang = (Util.float_random(0, 2) <= 1) ? -0.2:0.2;
 		}
 		
-		override public function update_particle(game:GameEngine):void {
+		override public function update_bullet(game:GameEngine):void {
 			_g = game;
 			
 			_ct++;
-			this.angle += Util.random_float( -0.05, 0.05) + _ang;
+			this.angle += Util.float_random( -0.1, 0.1) + _ang;
 			
 			if (_vel < _speed) {
 				_vel += 0.15;
@@ -42,8 +49,8 @@ package particles
 			
 			if (_ct % 5 == 0) {
 				// add trail smoke to game
-				var bubble:Bubble = new Bubble(this.x + this.width / 2, this.y, this.angle - 180);
-				_g.particles.add();
+				var bubble:Bubble = new Bubble(this.x, this.y, this.angle - 180);
+				_g._particles.add(bubble);
 			}
 			
 			// may add a test of overlapping with other bullets
@@ -66,8 +73,8 @@ package particles
 		
 		override public function do_remove():void {
 			if (_g != null) {
-				var explosion:Explosion = new Explosion(itr_bubble.x, itr_bubble.y, 0)
-				_explosions.add(explosion);
+				var explosion:Explosion = new Explosion(this.x, this.y, 0)
+				_g._particles.add(explosion);
 				explosion.explode();
 			}
 		}

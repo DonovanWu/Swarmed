@@ -13,7 +13,7 @@ package guns
 				ads_multi : 0.5,
 				speed : 8,
 				orpm : 480,
-				brom : 1000,
+				brpm : 1000,
 				damage : 34,
 				burst : 3,
 				pellets: 1,

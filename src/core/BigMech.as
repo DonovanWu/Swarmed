@@ -7,30 +7,36 @@ package core
 	 * 
 	 * @author Wenrui (Donovan) Wu
 	 */
-	public class Knight extends Character
+	public class BigMech extends Character
 	{
 		public var body:FlxSprite = new FlxSprite();
 		public var limbs:FlxSprite = new FlxSprite();
 		public var hitbox:FlxSprite = new FlxSprite();
 		
-		public var weapon:BulletEmitter = new BulletEmitter( { } );
-		public var weapon_spr:FlxSprite = new FlxSprite();
-		public var weapon_offset:FlxPoint = new FlxPoint();
+		public var weapon1:BulletEmitter = new BulletEmitter( { } );
+		public var weapon2:BulletEmitter = new BulletEmitter( { } );
+		public var weapon3:BulletEmitter = new BulletEmitter( { } );
+		public var weapon_offset1:FlxPoint = new FlxPoint();
+		public var weapon_offset2:FlxPoint = new FlxPoint();
+		public var weapon_offset3:FlxPoint = new FlxPoint();
 		
 		public var w1_lv:int;	// level for weapon 1
 		public var w2_lv:int;	// level for weapon 2
 		
-		public const weaponMapping:Object = [["Revolver", "Marksman Rifle", "Assualt Rifle"],
-											["Handgun", "Machine Pistol", "Submachine Gun"]];
+		public const weaponMapping:Object = [["Light Machine Gun"],
+											["RocketLauncher"]];
 											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
 		public var ammunition:Array = [ { mag: 1, ammo: 1 }, { mag: 1, ammo: 1 } ];
 		public var init:Boolean = false;
 		
+		private var reload_time:int = 120;
+		private var ct_reload_time:int = 0;
+		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[800, 1600, false], [800, 1600, false]];
+		protected var exp:Array = [[false], [false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -38,33 +44,27 @@ package core
 		private var wait:int = -1;
 		public var waypoint:FlxPoint;
 		
-		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
+		public function BigMech(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.5;
-			sprintSpeed = 2.5;
+			walkSpeed = 1.0;
+			sprintSpeed = 1.2;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
-			max_hp = 200;
+			max_hp = 1500;
+			regen_amount = 0;
+			giant = true;
 			
 			if (!player_controlled) {
-				// if it is AI, then pick a random gun
-				w1_lv = Util.int_random(0, 2);
-				w2_lv = Util.int_random(0, 2);
 				shoot_span = Util.int_random(45, 75);
 			}
 			
-			body.loadGraphic(Imports.KNIGHT_BODY);
+			body.loadGraphic(Imports.BIGMECH_BODY);
+			limbs.visible = false;
 			
-			limbs.loadGraphic(Imports.KNIGHT_LIMBS, true, false, 60, 45);
-			limbs.origin.x = body.width / 2;
-			limbs.origin.y = body.height / 2;
-			limbs.addAnimation("reload_rifle", Util.consecutive_num(2, 14), 12, false);
-			limbs.addAnimation("reload_pistol", Util.consecutive_num(15, 19), 10, false);
-			
-			hitbox.loadGraphic(Imports.IMPORT_HITBOX_25x30);
+			hitbox.loadGraphic(Imports.IMPORT_HITBOX_80x80);
 			hitbox.alpha = 0.3;
-			hitbox.visible = false;
+			// hitbox.visible = false;
 			
 			if (!init) {
 				init_ammunition();
@@ -89,25 +89,19 @@ package core
 			// add weapons, corresponding bullet emitters and offset info
 			switch_weapon();
 			
-			this.add(weapon);
-			this.add(weapon_spr);
+			this.add(weapon1);
+			this.add(weapon2);
+			this.add(weapon3);
 		}
 		
 		override public function update_position():void {
 			body.set_position(x() - body.width / 2, y() - body.height / 2);
-			hitbox.set_position(x() - hitbox.width / 2, y() - hitbox.height / 2);
+			hitbox.set_position(x() - hitbox.width / 2 + 10, y() - hitbox.height / 2);
 			limbs.set_position(body.x, body.y);
 			
 			body.angle = ang;
 			hitbox.angle = ang;
 			limbs.angle = ang;
-			
-			// weapon position
-			var wo_x:Number = weapon_offset.x;
-			var wo_y:Number = weapon_offset.y;
-			var weap_pos:FlxPoint = Util.calibrate_pos(x(), y(), wo_x, wo_y, ang * Util.DEG2RAD);
-			weapon_spr.set_position(weap_pos.x, weap_pos.y);
-			weapon_spr.angle = ang;
 			
 			update_mobility();
 			// update_limb_anim();
@@ -115,27 +109,36 @@ package core
 		
 		override protected function update_weapon():void {
 			if (reloading) {
-				if (limbs.finished) {
-					weapon.reload();
-					limbs.finished = false;
+				ct_reload_time++;
+				if (ct_reload_time >= reload_time) {
+					ct_reload_time = 0;
+					if (weaponSlot == 0) {
+						weapon1.reload();
+						weapon2.reload();
+					} else {
+						weapon3.reload();
+					}
 					reloading = false;
 				}
 			} else {
-				weapon.update_emitter(_g, this);
+				if (weaponSlot == 0) {
+					weapon1.update_emitter(_g, this);
+					weapon2.update_emitter(_g, this);
+				} else {
+					weapon3.update_emitter(_g, this);
+				}
 			}
 		}
 		
 		protected function update_mobility():void {
 			if (stance == "hip") {
-				mobility = weapon.mobility;
+				mobility = weapon1.mobility;
 			} else {	// aim
-				mobility = weapon.mobility * weapon.ads_multi;
+				mobility = weapon1.mobility * weapon1.ads_multi;
 			}
 		}
 		
 		override protected function update_ai():void {
-			isMoving = false;
-			
 			if (_g == null) {
 				return;
 			}
@@ -248,6 +251,13 @@ package core
 				}
 			}
 			
+			var weapon:BulletEmitter;
+			if (weaponSlot == 0) {
+				weapon = weapon1;
+			} else {
+				weapon = weapon2;
+			}
+			
 			if (Util.is_key(Util.RELOAD, true) && weapon.needReload()) {
 				// toggle reload
 				reloadOp();
@@ -255,12 +265,23 @@ package core
 		}
 		
 		protected function update_ammunition():void {
+			var weapon:BulletEmitter;
+			if (weaponSlot == 0) {
+				weapon = weapon1;
+			} else {
+				weapon = weapon3;
+			}
+			
 			ammunition[weaponSlot].mag = weapon.mag;
 			ammunition[weaponSlot].ammo = weapon.ammo;
 		}
 		
 		override public function getWeapon():BulletEmitter {
-			return weapon;
+			if (weaponSlot == 0) {
+				return weapon1;
+			} else {
+				return weapon3;
+			}
 		}
 		
 		// set up a random goal position, walk to it and returns whether the destination has been reached
@@ -279,7 +300,6 @@ package core
 				waypoint = new FlxPoint(Util.int_random(100, 540), Util.int_random(100, 540));
 				return false;
 			} else {
-				isMoving = true;
 				_ct++;
 				
 				var goal_angle:Number = Math.atan2(waypoint.y - this.y(), waypoint.x - this.x()) * Util.RAD2DEG;
@@ -315,22 +335,12 @@ package core
 		}
 		
 		override protected function line_up_with_muzzle(dx:Number, dy:Number):FlxPoint {
-			var wo_x:Number = weapon_offset.x;
-			var wo_y:Number = weapon_offset.y;
-			
-			if (dy*dy + dx*dx > wo_x * wo_x + wo_y * wo_y) {
-				// spin-prevented match-up to muzzle position
-				var weap_pos:FlxPoint = Util.calibrate_pos(x(), y(), wo_x, wo_y, ang*Util.DEG2RAD);
-				dy = FlxG.mouse.y - weap_pos.y;
-				dx = FlxG.mouse.x - weap_pos.x;
-			}
-			
 			return new FlxPoint(dx, dy);
 		}
 		
 		override public function muzzle_position():FlxPoint {
-			var dx:Number = weapon_offset.x + weapon_spr.width;
-			var dy:Number = weapon_offset.y + weapon_spr.height / 2;
+			var dx:Number = weapon_offset3.x;
+			var dy:Number = weapon_offset3.y;
 			
 			return Util.calibrate_pos(x(), y(), dx, dy, ang*Util.DEG2RAD);
 		}
@@ -345,43 +355,40 @@ package core
 				name = weaponMapping[1][w2_lv];
 			}
 			
-			weapon = Util.weapon_map_emitter(name);
-			weapon.setAmmo(ammunition[weaponSlot].ammo, ammunition[weaponSlot].mag);
+			weapon1 = Util.weapon_map_emitter("Light Machine Gun");
+			weapon2 = Util.weapon_map_emitter("Light Machine Gun");
+			weapon3 = Util.weapon_map_emitter("Rocket Launcher");
+			weapon1.setAmmo(ammunition[0].ammo, ammunition[0].mag);
+			weapon3.setAmmo(ammunition[1].ammo, ammunition[1].mag);
 			
 			/*
-			var ammunition:Object = _g.ammunition[weaponSlot];
-			weapon = Util.weapon_map_emitter(name);
-			weapon.setAmmo(ammunition.ammo, ammunition.mag);
+			weapon1.setMuzzlePosInfo(Util.calibrate_pos(x(), y(), weapon_offset1.x, weapon_offset1.y, ang*Util.DEG2RAD));
+			weapon2.setMuzzlePosInfo(Util.calibrate_pos(x(), y(), weapon_offset2.x, weapon_offset2.y, ang*Util.DEG2RAD));
 			*/
+			weapon1.setMuzzlePosInfo(weapon_offset1);
+			weapon2.setMuzzlePosInfo(weapon_offset2);
 			
-			weapon_spr.loadGraphic(Util.weapon_map_import(name));
-			weapon_spr.setOriginToCorner();
-			
-			weapon_offset = weapon_offset.make( -3, 9);
-			limbs.frame = 0;
-			
-			if (weapon.type == "pistol") {
-				weapon_offset = weapon_offset.make(25, 6);
-				limbs.frame = 1;
-			}
+			weapon_offset1 = weapon_offset1.make(64, -10);
+			weapon_offset2 = weapon_offset2.make(64, 10);
+			weapon_offset3 = weapon_offset3.make(80, 0);
 		}
 		
 		protected function init_ammunition():void {
-			var name1:String = weaponMapping[0][w1_lv];
-			var name2:String = weaponMapping[1][w2_lv];
+			var name1:String = "Light Machine Gun";
+			var name2:String = "Rocket Launcher";
 			
 			var weapon1:BulletEmitter = Util.weapon_map_emitter(name1);
-			var	weapon2:BulletEmitter = Util.weapon_map_emitter(name2);
+			var weapon2:BulletEmitter = Util.weapon_map_emitter(name1);
+			var	weapon3:BulletEmitter = Util.weapon_map_emitter(name2);
 			
 			ammunition[0].mag = weapon1.gunstat.mag_size;
 			ammunition[0].ammo = weapon1.gunstat.ammo;
-			ammunition[1].mag = weapon2.gunstat.mag_size;
-			ammunition[1].ammo = weapon2.gunstat.ammo;
+			ammunition[1].mag = weapon3.gunstat.mag_size;
+			ammunition[1].ammo = weapon3.gunstat.ammo;
 		}
 		
 		override public function reloadOp():void {
 			reloading = true;
-			limbs.play("reload_" + weapon.type);
 		}
 		
 		override public function getHitBox():FlxSprite {
@@ -390,26 +397,17 @@ package core
 		
 		override public function die():void {
 			// spawn a corpse on stage
-			_g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
+			_g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
 			
 			if (!player_controlled) {
-				// randomly spawn a weapon upgrade
-				var r:Number = Util.float_random(0, 100);
-				if (r > 80) {
-					// weapon 1 upgrade
-					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (r < 20) {
-					// weapon 2 upgrade
-					_g.packets.add(new Packet(this.x(), this.y(), 1));
-				}
+				// big mech gives an ammo pack
+				_g.packets.add(new Packet(this.x(), this.y(), 2));
 			}
 			
 			dead = true;
 		}
 		
 		override public function gainExp(amount:int, which:int):void {
-			// _g.debug_text.text = "xp gained!"
-			
 			FlxG.play(Imports.SOUND_SCORE);
 			
 			var w_lv:int = 0;

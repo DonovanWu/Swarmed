@@ -271,6 +271,36 @@ package  {
 					return null;
 			}
 		}
+		
+		// TODO: mark for change!
+		public static function weapon_soundeffect_map(name:String):Class {
+			switch(name) {
+				case "Assualt Rifle":
+					return Imports.GUN_ASSAULT_RIFLE;
+				case "Assualt Shotgun":
+					return Imports.GUN_ASSAULT_SHOTGUN;
+				case "Bulp-up Rifle":
+					return Imports.GUN_BULPUP_RIFLE;
+				case "Tactical Shotgun":
+					return Imports.GUN_TACTICAL_SHOTGUN;
+				case "Double Barrel":
+					return Imports.GUN_DOUBLE_BARREL;
+				case "Handgun":
+					return Imports.GUN_HANDGUN;
+				case "Light Machine Gun":
+					return Imports.GUN_LIGHT_MACHINE_GUN;
+				case "Machine Pistol":
+					return Imports.GUN_MACHINE_PISTOL;
+				case "Marksman Rifle":
+					return Imports.GUN_MARKSMAN_RIFLE;
+				case "Revolver":
+					return Imports.GUN_REVOLVER;
+				case "Submachine Gun":
+					return Imports.GUN_SUBMACHINE_GUN;
+				default:
+					return null;
+			}
+		}
 	}
 
 }

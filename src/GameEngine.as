@@ -30,26 +30,29 @@ package {
 		public var bullets:FlxGroup = new FlxGroup();
 		public var chars:FlxGroup = new FlxGroup();
 		public var _particles:FlxGroup = new FlxGroup();
-		public static var roadblocks:FlxGroup = new FlxGroup();
+		public var roadblocks:FlxGroup = new FlxGroup();	// static
 		public var packets:FlxGroup = new FlxGroup();
-		public static var corpses:FlxGroup = new FlxGroup(50);
+		public var corpses:FlxGroup = new FlxGroup(50);		// static
 		
 		// in-game settings
 		public var bg:FlxSprite = new FlxSprite();
 		public var player:Character;
 		public var reticle:FlxSprite = new FlxSprite();
+		public var title_screen:FlxSprite = new FlxSprite();
 		
 		// save
-		public static var progress:Object = { knight:[0, 0], vanguard:[0, 0] };
-		public var ammunition:Array = [{ mag:1, ammo:1 }, { mag:1, ammo:1 }];
+		public static var progress:Object = { knight:[0, 0], vanguard:[0, 0], bigmech:[0, 0]};
+		public var ammunition:Array = [{ mag:1, ammo:1 }, { mag:1, ammo:1 }, {mag:1, ammo:1}];
 		
 		// game mechanics
 		public var debug_text:FlxText = new FlxText(0, 0, 320);
 		public var gameStart:Boolean = false;
 		public var timer:int = 0;
 		public var kills:int = 0;
-		public var spawn_wait:int = 300;	// 600?
+		public var spawn_wait:int = 600;
 		public const MAX_ENEMY_ONSTAGE:int = 20;
+		public var game_status:String = "title";	// title, in-game, gameover
+		public var init:Boolean = false;
 		
 		override public function create():void {
 			super.create();
@@ -57,20 +60,16 @@ package {
 			// layer: bottom
 			add_bg();
 			
-			this.add(corpses);
+			corpses.add(new VanguardCorpse(320, 320, 30));
 			
-			if (firstTime) {
-				add_roadblocks();
-				
-				// turn off after tutorial is implemented
-				firstTime = false;
-			}
+			add_roadblocks();
 			
 			this.add(roadblocks);
 			
 			// layer: mid
+			this.add(corpses);
 			this.add(packets);
-			add_chars();
+			this.add(chars);
 			this.add(bullets);
 			this.add(_particles);
 			
@@ -79,9 +78,13 @@ package {
 			add_tutorial_objs();
 			add_reticle();
 			
-			set_player();
+			title_screen.loadGraphic(Imports.IMPORT_TITLE);
+			this.add(title_screen);
 			
 			this.add(debug_text);
+			
+			// debug_text.text = corpses.members.length + "";
+			debug_text.visible = false;
 		}
 		
 		public function add_bg():void {
@@ -113,9 +116,12 @@ package {
 		}
 		
 		public function add_chars():void {
-			
+			/*
 			var knight1:Knight = new Knight(320, 320, progress.knight[0], progress.knight[1], true);
 			chars.add(knight1);
+			*/
+			var me:BigMech = new BigMech(320, 320, progress.bigmech[0], progress.bigmech[1], true);
+			chars.add(me);
 			
 			
 			// test object
@@ -157,7 +163,7 @@ package {
 		}
 		
 		public function add_reticle():void {
-			reticle.loadGraphic(Imports.MOUSE_RETICLE);
+			reticle.loadGraphic(Imports.MOUSE_RETICLE, true, false, 32, 32);
 			this.add(reticle);
 		}
 		
@@ -172,44 +178,100 @@ package {
 			}
 		}
 		
-		// assign which thing on scene is going to be player
-		public function set_player():void {
-			player = chars.getFirstAlive() as Character;
-		}
-		
 		override public function update():void {
 			super.update();
 			
-			/*
-			if (!gameStart) {
-				init_ammunition();
-				gameStart = true;
-			}
-			*/
-			timer++;
-			
-			update_characters();
-			update_bullets();
-			update_particles();
-			
-			update_tutorial();
-			update_status_bar();
-			
 			update_reticle();
 			
-			// spawn_chars();
+			if (game_status == "title") {
+				title_screen.visible = true;
+				if (!init) {
+					FlxG.flash();
+					init = true;
+				}
+				for (var i:int = corpses.members.length - 1; i >= 0; i--) {
+					var itr_corpse:Corpse = corpses.members[i];
+					if (itr_corpse != null) {
+						itr_corpse.update_corpse(this);
+					}
+				}
+			} else if (game_status == "in-game") {
+				if (init) {
+					FlxG.flash();
+					init = false;
+				}
+				
+				title_screen.visible = false;
+				
+				timer++;
+				
+				update_characters();
+				update_bullets();
+				update_particles();
+				
+				update_tutorial();
+				update_status_bar();
+				
+				spawn_chars();
+				spawn_swarm();
+				spawn_ammo();
+			} else if (game_status == "gameover") {
+				can_revive = true;
+				if (player == null) {
+					game_status = "title";
+				}
+			}
 		}
 		
 		private function spawn_chars():void {
-			if (timer % spawn_wait == 0 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
-				var r:Number = 640 * Math.sqrt(2) / 2;
-				var thetha:Number = Util.float_random(0, 6.28);
+			if (timer % spawn_wait == 1 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
+				var r:Number = 906;
+				var theta:Number = Util.float_random(0, 6.28);
 				
-				var x:Number = r * Math.cos(thetha);
-				var y:Number = r * Math.sin(thetha);
+				var x:Number = r * Math.cos(theta);
+				var y:Number = r * Math.sin(theta);
 				
-				var knight:Knight = new Knight(x, y);
-				chars.add(knight);
+				var choice:int = Util.float_random(0, 100);
+				if (choice < 5) {
+					var knight:Knight = new Knight(x, y);
+					chars.add(knight);
+				} else {
+					var vanguard:Vanguard = new Vanguard(x, y);
+					chars.add(vanguard);
+				}
+			}
+		}
+		
+		private function spawn_swarm():void {
+			if (kills % 30 == 0) {
+				// every 20 kills will have a wave including multiple vanguards, knight and a big mech
+				for (var i:int = 0; i < 4; i++ ) {
+					var r:Number = 906;
+					var thetha:Number = Util.float_random(0, 6.28);
+					
+					var x:Number = r * Math.cos(thetha);
+					var y:Number = r * Math.sin(thetha);
+					
+					var knight:Knight = new Knight(x, y);
+					chars.add(knight);
+					var vanguard:Vanguard = new Vanguard(x, y);
+					chars.add(vanguard);
+				}
+				
+				// one big mech
+				var bigmech:BigMech = new BigMech(-200, 320);
+				chars.add(bigmech);
+				
+				kills++;	// therefore kills is no longer an accurate count of things ... ;_;
+				// ending up with add 10 more kills to kill so...
+				
+				// TODO: warns swarm in bound
+			}
+		}
+		
+		private function spawn_ammo():void {
+			if (timer % spawn_wait == spawn_wait / 2) {
+				packets.add(new Packet(Util.int_random(40, 600), Util.int_random(40, 600), 2));
 			}
 		}
 		
@@ -220,37 +282,54 @@ package {
 		private function update_reticle():void {
 			var x:Number = FlxG.mouse.x - reticle.width / 2;
 			var y:Number = FlxG.mouse.y - reticle.height / 2;
-			reticle.set_position(x,y);
+			reticle.set_position(x, y);
+			if (player != null && player.stance == "aim") {
+				reticle.frame = 1;
+			} else {
+				reticle.frame = 0;
+			}
 		}
 		
 		private function update_characters():void {
+			// debug_text.text = chars.members.length + "";
+			
 			for (var i:int = chars.members.length - 1; i >= 0; i--) {
 				var char:Character = chars.members[i];
 				if (char != null) {
 					char.update_character(this);
 					
-					// hit detection
+					// bullet hit detection
 					FlxG.overlap(char.getHitBox(), bullets, function(hitbox:FlxSprite, bullet:Bullet):void {
 						char.take_damage(bullet.get_damage());
 						
-						var blood:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180, Spark.BLOOD);
+						var spark:String = (char.giant)? Spark.SPARK : Spark.BLOOD;
+						var blood:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180, spark);
 						_particles.add(blood);
+						bullet.do_remove();
 						
 						bullets.remove(bullet, true);
 					});
 					
 					FlxG.collide(char.getHitBox(), roadblocks, function(hitbox:FlxSprite, roadblock:FlxSprite):void {
 						// moving roadblock
-						if (char.player_controlled) {
-							char.moveSpeed /= 3;
-						} else {
-							char.roam(true);
+						if (!char.giant) {
+							if (char.player_controlled) {
+								char.moveSpeed /= 4;
+							} else {
+								char.roam(true);
+							}
 						}
 					});
 					
 					if (char.player_controlled) {
 						FlxG.overlap(char.getHitBox(), packets, function (hitbox:FlxSprite, item:Packet):void {
-							char.gainExp(item.getAmount(), int(item.frame))
+							if (item.frame != 2) {
+								char.gainExp(item.getAmount(), int(item.frame));
+							} else {
+								// pick up ammo
+								FlxG.play(Imports.SOUND_SCORE);
+								char.getWeapon().replenishAmmo(item.getAmount());
+							}
 							packets.remove(item);
 						});
 					}
@@ -261,7 +340,7 @@ package {
 						if (char.player_controlled) {
 							player = null;
 							kills--;
-							// gameover!
+							game_status = "gameover";
 						}
 						
 						chars.remove(char, true);
@@ -289,9 +368,11 @@ package {
 					}
 				} // end of if not null
 				
+				// bullet hit roadblock detection
 				FlxG.overlap(roadblocks, bullets, function(roadblock:FlxSprite, bullet:Bullet):void {
 					var spark:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180);
 					_particles.add(spark);
+					bullet.do_remove();
 					
 					bullets.remove(bullet, true);
 				});
@@ -339,6 +420,41 @@ package {
 				}
 			}
 			return null;
+		}
+		
+		public var can_revive:Boolean = true;	// to make sure only one is revived
+		
+		public function revive_knight(x:Number, y:Number, corpse:Corpse):void {
+			if (can_revive) {
+				var knight:Knight = new Knight(x, y, progress.knight[0], progress.knight[1], true);
+				chars.add(knight);
+				player = knight;
+				
+				corpses.remove(corpse);
+				can_revive = false;
+			}
+		}
+		
+		public function revive_vanguard(x:Number, y:Number, corpse:Corpse):void {
+			if (can_revive) {
+				var knight:Vanguard = new Vanguard(x, y, progress.vanguard[0], progress.vanguard[1], true);
+				chars.add(knight);
+				player = knight;
+				
+				corpses.remove(corpse);
+				can_revive = false;
+			}
+		}
+		
+		public function revive_bigmech(x:Number, y:Number, corpse:Corpse):void {
+			if (can_revive) {
+				var knight:BigMech = new BigMech(x, y, 0, 0, true);
+				chars.add(knight);
+				player = knight;
+				
+				corpses.remove(corpse);
+				can_revive = false;
+			}
 		}
 	}
 	

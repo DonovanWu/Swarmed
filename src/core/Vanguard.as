@@ -7,7 +7,7 @@ package core
 	 * 
 	 * @author Wenrui (Donovan) Wu
 	 */
-	public class Knight extends Character
+	public class Vanguard extends Character
 	{
 		public var body:FlxSprite = new FlxSprite();
 		public var limbs:FlxSprite = new FlxSprite();
@@ -20,8 +20,8 @@ package core
 		public var w1_lv:int;	// level for weapon 1
 		public var w2_lv:int;	// level for weapon 2
 		
-		public const weaponMapping:Object = [["Revolver", "Marksman Rifle", "Assualt Rifle"],
-											["Handgun", "Machine Pistol", "Submachine Gun"]];
+		public const weaponMapping:Object = [["Revolver", "Bulp-up Rifle", "Assualt Rifle", "Light Machine Gun"],
+											["Handgun", "Double Barrel", "Tactical Shotgun", "Assualt Shotgun"]];
 											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
@@ -30,7 +30,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[800, 1600, false], [800, 1600, false]];
+		protected var exp:Array = [[500, 1000, 1500, false], [500, 1000, 1500, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -38,23 +38,24 @@ package core
 		private var wait:int = -1;
 		public var waypoint:FlxPoint;
 		
-		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
+		public function Vanguard(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.5;
-			sprintSpeed = 2.5;
+			walkSpeed = 1.0;
+			sprintSpeed = 1.8;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
-			max_hp = 200;
+			max_hp = 300;
+			regen_amount = 2;
 			
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
-				w1_lv = Util.int_random(0, 2);
-				w2_lv = Util.int_random(0, 2);
+				w1_lv = Util.int_random(0, 3);
+				w2_lv = Util.int_random(0, 3);
 				shoot_span = Util.int_random(45, 75);
 			}
 			
-			body.loadGraphic(Imports.KNIGHT_BODY);
+			body.loadGraphic(Imports.VANGUARD_BODY);
 			
 			limbs.loadGraphic(Imports.KNIGHT_LIMBS, true, false, 60, 45);
 			limbs.origin.x = body.width / 2;
@@ -134,8 +135,6 @@ package core
 		}
 		
 		override protected function update_ai():void {
-			isMoving = false;
-			
 			if (_g == null) {
 				return;
 			}
@@ -279,7 +278,6 @@ package core
 				waypoint = new FlxPoint(Util.int_random(100, 540), Util.int_random(100, 540));
 				return false;
 			} else {
-				isMoving = true;
 				_ct++;
 				
 				var goal_angle:Number = Math.atan2(waypoint.y - this.y(), waypoint.x - this.x()) * Util.RAD2DEG;
@@ -390,15 +388,15 @@ package core
 		
 		override public function die():void {
 			// spawn a corpse on stage
-			_g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
+			_g.corpses.add(new VanguardCorpse(this.x(), this.y(), this.ang));
 			
 			if (!player_controlled) {
 				// randomly spawn a weapon upgrade
 				var r:Number = Util.float_random(0, 100);
-				if (r > 80) {
+				if (r > 70) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (r < 20) {
+				} else if (r < 30) {
 					// weapon 2 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 1));
 				}
@@ -408,8 +406,6 @@ package core
 		}
 		
 		override public function gainExp(amount:int, which:int):void {
-			// _g.debug_text.text = "xp gained!"
-			
 			FlxG.play(Imports.SOUND_SCORE);
 			
 			var w_lv:int = 0;

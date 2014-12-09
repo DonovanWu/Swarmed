@@ -6,8 +6,8 @@ package particles
 		public var _speed:Number;
 		public var _angle:Number;
 		public var _distance:Number;
-		private var _range:Number;
-		private var _damage:int;
+		protected var _range:Number;
+		protected var _damage:int;
 		
 		public function Bullet(x:Number = 0, y:Number = 0, ang:Number = 0, speed:Number = 5, damage:int = 0, range:Number = 1200) {
 			super(x, y);

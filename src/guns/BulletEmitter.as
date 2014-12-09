@@ -3,6 +3,7 @@ package guns
 	import core.Character;
 	import org.flixel.*;
 	import particles.Bullet;
+	import particles.Torpedo;
 	/**
 	 * ...
 	 * @author Wenrui (Donovan) Wu
@@ -79,11 +80,17 @@ package guns
 			
 			if (triggered()) {
 				
-				if (burst != 0 && ct_brpm >= brpm) ct_brpm -= brpm;
+				if (name == "Rocket Launcher") {
+					FlxG.play(Imports.SOUND_LAUNCHER);
+				} else {
+					FlxG.play(Imports.SOUND_SHOOT_3);
+				}
+				
+				if (burst != 0 && ct_orpm >= orpm) ct_orpm -= orpm;
 				
 				if (mag > 0) {
-					if (ct_orpm >= orpm) {
-						ct_orpm -= orpm;
+					if (ct_brpm >= brpm) {
+						ct_brpm -= brpm;
 						decr_ammo();
 						if (burst != 0) ct_burst++;
 						
@@ -96,22 +103,22 @@ package guns
 				} // end if mag > 0
 			} else {
 				// capping the rpm
-				if (ct_orpm < orpm) {
-					ct_orpm++;
+				if (ct_brpm < brpm) {
+					ct_brpm++;
 				} else {
-					ct_orpm = orpm;
+					ct_brpm = brpm;
 				}
 				
 				if (burst != 0) {
-					if (ct_brpm < brpm) {
-						ct_brpm++;
+					if (ct_orpm < orpm) {
+						ct_orpm++;
 					} else {
-						ct_brpm = brpm;
+						ct_orpm = orpm;
 					}
 				}
 			}
 			
-			if (ct_burst >= Math.abs(burst) && ct_brpm >= brpm) ct_burst = 0;
+			if (ct_burst >= Math.abs(burst) && ct_orpm >= orpm) ct_burst = 0;
 			
 			if (mag <= 0 && backup_ammo() > 0) {
 				_ch.reloadOp();
@@ -222,10 +229,23 @@ package guns
 			
 			var theta:Number = _ch.ang + Util.float_random( -ds, ds);
 			
-			var muzzle_pos:FlxPoint = _ch.muzzle_position();
+			
+			var muzzle_pos:FlxPoint = muzzlePosInfo;
+			if (muzzle_pos == null) {
+				muzzle_pos = _ch.muzzle_position();
+			} else {
+				muzzle_pos = Util.calibrate_pos(_ch.x(), _ch.y(), muzzlePosInfo.x, muzzlePosInfo.y, _ch.ang * Util.DEG2RAD);
+			}
+			
+			// var muzzle_pos:FlxPoint = _ch.muzzle_position();
 			
 			var range:Number = (gunstat.range == null)?930:gunstat.range;
 			var bullet:Bullet = new Bullet(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage, range);
+			
+			if (gunstat.spawn != null && gunstat.spawn == "rocket") {
+				bullet = new Torpedo(muzzle_pos.x, muzzle_pos.y, theta);
+			}
+			
 			_g.bullets.add(bullet);
 		}
 		
@@ -237,6 +257,12 @@ package guns
 			}
 			
 			ammo = n_ammo;
+		}
+		
+		private var muzzlePosInfo:FlxPoint;
+		
+		public function setMuzzlePosInfo(pos:FlxPoint):void {
+			muzzlePosInfo = pos;
 		}
 		
 		public function replenishAmmo(amount:int):void {
