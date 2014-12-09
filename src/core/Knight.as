@@ -2,6 +2,7 @@ package core
 {
 	import gameobj.Packet;
 	import guns.*;
+	import particles.Explosion;
 	import org.flixel.*;
 	/**
 	 * 
@@ -382,6 +383,7 @@ package core
 		override public function reloadOp():void {
 			reloading = true;
 			limbs.play("reload_" + weapon.type);
+			FlxG.play(Imports.SOUND_RELOAD);
 		}
 		
 		override public function getHitBox():FlxSprite {
@@ -389,6 +391,10 @@ package core
 		}
 		
 		override public function die():void {
+			var explosion:Explosion = new Explosion(this.x(), this.y(), 0)
+			_g._particles.add(explosion);
+			explosion.explode();
+			
 			// spawn a corpse on stage
 			_g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
 			

@@ -2,6 +2,7 @@ package core
 {
 	import gameobj.Packet;
 	import guns.*;
+	import particles.Explosion;
 	import org.flixel.*;
 	/**
 	 * 
@@ -387,6 +388,10 @@ package core
 		}
 		
 		override public function die():void {
+			var explosion:Explosion = new Explosion(this.x(), this.y(), 0)
+			_g._particles.add(explosion);
+			explosion.explode();
+			
 			// spawn a corpse on stage
 			_g.corpses.add(new VanguardCorpse(this.x(), this.y(), this.ang));
 			

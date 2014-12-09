@@ -53,5 +53,8 @@ package  {
 		[Embed( source = "../resc/sound/sfx_powerup.mp3" )] public static var SOUND_SCORE:Class;
 		[Embed( source = "../resc/sound/sfx_launcher.mp3" )] public static var SOUND_LAUNCHER:Class;
 		[Embed( source = "../resc/sound/shoot3.mp3" )] public static var SOUND_SHOOT_3:Class;
+		[Embed( source = "../resc/sound/sfx_hit.mp3" )] public static var SOUND_HIT:Class;
+		[Embed( source = "../resc/sound/bgm.mp3" )] public static var SOUND_BGM:Class;
+		[Embed( source = "../resc/sound/reload.mp3" )] public static var SOUND_RELOAD:Class;
 	}
 }

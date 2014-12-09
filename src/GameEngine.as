@@ -49,10 +49,11 @@ package {
 		public var gameStart:Boolean = false;
 		public var timer:int = 0;
 		public var kills:int = 0;
-		public var spawn_wait:int = 600;
+		public var spawn_wait:int = 450;
 		public const MAX_ENEMY_ONSTAGE:int = 20;
 		public var game_status:String = "title";	// title, in-game, gameover
 		public var init:Boolean = false;
+		public var playing_music:Boolean = false;
 		
 		override public function create():void {
 			super.create();
@@ -60,7 +61,7 @@ package {
 			// layer: bottom
 			add_bg();
 			
-			corpses.add(new VanguardCorpse(320, 320, 30));
+			corpses.add(new KnightCorpse(320, 320, 30));
 			
 			add_roadblocks();
 			
@@ -182,6 +183,10 @@ package {
 			super.update();
 			
 			update_reticle();
+			if (!playing_music) {
+				FlxG.playMusic(Imports.SOUND_BGM, 0.6);
+				playing_music = true;
+			}
 			
 			if (game_status == "title") {
 				title_screen.visible = true;
@@ -232,7 +237,7 @@ package {
 				var y:Number = r * Math.sin(theta);
 				
 				var choice:int = Util.float_random(0, 100);
-				if (choice < 5) {
+				if (choice < 50) {
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
 				} else {
@@ -243,8 +248,8 @@ package {
 		}
 		
 		private function spawn_swarm():void {
-			if (kills % 30 == 0) {
-				// every 20 kills will have a wave including multiple vanguards, knight and a big mech
+			if (kills % 20 == 10) {
+				// every 10 kills will have a wave including multiple vanguards, knight and a big mech
 				for (var i:int = 0; i < 4; i++ ) {
 					var r:Number = 906;
 					var thetha:Number = Util.float_random(0, 6.28);
@@ -306,6 +311,7 @@ package {
 						var blood:Spark = new Spark(bullet.x, bullet.y, bullet.angle - 180, spark);
 						_particles.add(blood);
 						bullet.do_remove();
+						// FlxG.play(Imports.SOUND_HIT);
 						
 						bullets.remove(bullet, true);
 					});
