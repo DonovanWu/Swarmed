@@ -41,7 +41,7 @@ package {
 		public var title_screen:FlxSprite = new FlxSprite();
 		
 		// save
-		public static var progress:Object = { knight:[0, 0], vanguard:[0, 0], bigmech:[0, 0]};
+		public var progress:Object = { knight:[0, 0], vanguard:[0, 0], bigmech:[0, 0]};
 		public var ammunition:Array = [{ mag:1, ammo:1 }, { mag:1, ammo:1 }, {mag:1, ammo:1}];
 		
 		// game mechanics
@@ -460,6 +460,16 @@ package {
 				
 				corpses.remove(corpse);
 				can_revive = false;
+			}
+		}
+		
+		public function update_progress(w1_lv:int, w2_lv:int, which:String):void {
+			if (which == "knight") {
+				progress.knight[0] = w1_lv;
+				progress.knight[1] = w2_lv;
+			} else if (which == "vanguard") {
+				progress.vanguard[0] = w1_lv;
+				progress.vanguard[1] = w2_lv;
 			}
 		}
 	}

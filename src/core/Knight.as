@@ -31,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[800, 1600, false], [800, 1600, false]];
+		protected var exp:Array = [[75, 150, false], [75, 150, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -116,6 +116,7 @@ package core
 		
 		override protected function update_weapon():void {
 			if (reloading) {
+				stance = "hip";
 				if (limbs.finished) {
 					weapon.reload();
 					limbs.finished = false;
@@ -367,17 +368,21 @@ package core
 			}
 		}
 		
-		protected function init_ammunition():void {
+		protected function init_ammunition(w:int = 0):void {
 			var name1:String = weaponMapping[0][w1_lv];
 			var name2:String = weaponMapping[1][w2_lv];
 			
 			var weapon1:BulletEmitter = Util.weapon_map_emitter(name1);
 			var	weapon2:BulletEmitter = Util.weapon_map_emitter(name2);
 			
-			ammunition[0].mag = weapon1.gunstat.mag_size;
-			ammunition[0].ammo = weapon1.gunstat.ammo;
-			ammunition[1].mag = weapon2.gunstat.mag_size;
-			ammunition[1].ammo = weapon2.gunstat.ammo;
+			if (w != 2) {
+				ammunition[0].mag = weapon1.gunstat.mag_size;
+				ammunition[0].ammo = weapon1.gunstat.ammo;
+			}
+			if (w != 1) {
+				ammunition[1].mag = weapon2.gunstat.mag_size;
+				ammunition[1].ammo = weapon2.gunstat.ammo;
+			}
 		}
 		
 		override public function reloadOp():void {
@@ -432,10 +437,13 @@ package core
 					// upgrade!
 					if (which == 0) {
 						w1_lv++;
+						init_ammunition(1);
 					} else {
 						w2_lv++;
+						init_ammunition(2);
 					}
 					weaponSlot = which;
+					_g.update_progress(w1_lv, w2_lv, "knight");
 					switch_weapon();
 				}
 			}

@@ -110,6 +110,7 @@ package core
 		
 		override protected function update_weapon():void {
 			if (reloading) {
+				stance = "hip";
 				ct_reload_time++;
 				if (ct_reload_time >= reload_time) {
 					ct_reload_time = 0;
@@ -401,8 +402,10 @@ package core
 			_g._particles.add(explosion);
 			explosion.explode();
 			
-			// spawn a corpse on stage
-			_g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
+			// only 25 percent chance to spawn corpse on stage
+			if (Util.int_random(0,3) == 0) {
+				_g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
+			}
 			
 			if (!player_controlled) {
 				// big mech gives an ammo pack
