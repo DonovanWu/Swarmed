@@ -55,6 +55,7 @@ package core
 			max_hp = 1500;
 			regen_amount = 0;
 			giant = true;
+			rotation_spd = 1.5;
 			
 			if (!player_controlled) {
 				shoot_span = Util.int_random(45, 75);
@@ -181,8 +182,12 @@ package core
 						} else if (err <= -270 ) {
 							ang = ang + 360;
 						}
-						var dtheta:Number = (goal_angle - ang) / 10;
+						var dtheta:Number = Util.sig_n(goal_angle - ang) * rotation_spd;
 						ang += dtheta;
+						
+						if (ang > 360) {
+							ang -= 360;
+						}
 					}
 					update_position();
 					break;
@@ -226,12 +231,9 @@ package core
 					break;
 					
 				case 4:
-					// randomly choose to switch gun
-					var choice:int = Util.int_random(0, 3);
-					if (choice == 0) {
-						weaponSlot = 1 - weaponSlot;
-						switch_weapon();
-					}
+					// big mech will definitely choose to switch gun
+					weaponSlot = 1 - weaponSlot;
+					switch_weapon();
 					step++;
 					
 					break;
@@ -403,7 +405,7 @@ package core
 			explosion.explode();
 			
 			// only 25 percent chance to spawn corpse on stage
-			if (Util.int_random(0,3) == 0) {
+			if (Util.int_random(0, 1) == 0) {
 				_g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
 			}
 			

@@ -179,6 +179,7 @@ package core
 							ang = ang + 360;
 						}
 						var dtheta:Number = (goal_angle - ang) / 10;
+						if (dtheta < rotation_spd) dtheta = rotation_spd;
 						ang += dtheta;
 					}
 					update_position();
