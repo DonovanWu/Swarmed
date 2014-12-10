@@ -306,7 +306,7 @@ package core
 				err = Util.point_dist(waypoint.x, waypoint.y, this.x(), this.y());
 				err_tol = 5;
 				
-				if (err <= err_tol || _ct > 300 ) {
+				if (err <= err_tol ) {
 					_ct = 0;
 					waypoint = null;
 					return true;
@@ -406,10 +406,10 @@ package core
 			if (!player_controlled) {
 				// randomly spawn a weapon upgrade
 				var r:Number = Util.float_random(0, 100);
-				if (r > 80) {
+				if (r < 25) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (r < 20) {
+				} else if (r > 75) {
 					// weapon 2 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 1));
 				}

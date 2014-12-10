@@ -31,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[75, 120, 300, false], [75, 120, 300, false]];
+		protected var exp:Array = [[75, 120, 200, false], [75, 120, 200, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -304,7 +304,7 @@ package core
 				err = Util.point_dist(waypoint.x, waypoint.y, this.x(), this.y());
 				err_tol = 5;
 				
-				if (err <= err_tol || _ct > 300 ) {
+				if (err <= err_tol ) {
 					_ct = 0;
 					waypoint = null;
 					return true;
@@ -403,10 +403,10 @@ package core
 			if (!player_controlled) {
 				// randomly spawn a weapon upgrade
 				var r:Number = Util.float_random(0, 100);
-				if (r > 70) {
+				if (r < 30) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (r < 30) {
+				} else if (r > 70) {
 					// weapon 2 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 1));
 				}

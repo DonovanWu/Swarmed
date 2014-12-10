@@ -248,7 +248,7 @@ package {
 		}
 		
 		private function spawn_swarm():void {
-			if (kills % 20 == 10) {
+			if (kills % 25 == 10) {
 				// every 10 kills will have a wave including multiple vanguards, knight and a big mech
 				for (var i:int = 0; i < 4; i++ ) {
 					var r:Number = 906;

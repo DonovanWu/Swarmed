@@ -27,7 +27,7 @@ package core
 			
 			if (_g.game_status == "title") {
 				FlxG.overlap(this, _g.reticle, function(corse:FlxSprite, reticle:FlxSprite):void {
-					if (FlxG.mouse.pressed()) {
+					if (FlxG.mouse.justPressed()) {
 						revive_robot();
 						_g.game_status = "in-game";
 					}

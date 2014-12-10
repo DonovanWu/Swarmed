@@ -326,7 +326,7 @@ package core
 				err = Util.point_dist(waypoint.x, waypoint.y, this.x(), this.y());
 				err_tol = 5;
 				
-				if (err <= err_tol || _ct > 300 ) {
+				if (err <= err_tol) {
 					_ct = 0;
 					waypoint = null;
 					return true;
@@ -408,8 +408,10 @@ package core
 			}
 			
 			if (!player_controlled) {
-				// big mech gives an ammo pack
-				_g.packets.add(new Packet(this.x(), this.y(), 2));
+				// spawn three packs
+				_g.packets.add(new Packet(this.x(), this.y() - 5, 2));
+				_g.packets.add(new Packet(this.x() - 5, this.y(), 0));
+				_g.packets.add(new Packet(this.x() + 5, this.y(), 1));
 			}
 			
 			dead = true;
@@ -425,6 +427,7 @@ package core
 				w_lv = w2_lv;
 			}
 			
+			/*
 			if (exp[which][w_lv]) {
 				exp[which][w_lv] -= amount;
 				
@@ -439,6 +442,7 @@ package core
 					switch_weapon();
 				}
 			}
+			*/
 		}
 		
 		override public function should_remove():Boolean {

@@ -14,11 +14,11 @@ package guns
 				ads_multi : 0.8,
 				speed : 8,
 				orpm : 750,
-				damage : 15,
+				damage : 19,
 				burst : 1,
 				pellets: 1,
-				mag_size : 15,
-				ammo: 60,
+				mag_size : 16,
+				ammo: 80,
 				spread : { hip : 6, aim : 3 }
 			});
 		}

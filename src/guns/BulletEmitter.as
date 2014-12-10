@@ -80,12 +80,6 @@ package guns
 			
 			if (triggered()) {
 				
-				if (name == "Rocket Launcher") {
-					FlxG.play(Imports.SOUND_LAUNCHER);
-				} else {
-					FlxG.play(Imports.SOUND_SHOOT_3);
-				}
-				
 				if (burst != 0 && ct_orpm >= orpm) ct_orpm -= orpm;
 				
 				if (mag > 0) {
@@ -93,6 +87,14 @@ package guns
 						ct_brpm -= brpm;
 						decr_ammo();
 						if (burst != 0) ct_burst++;
+						
+						
+						if (name == "Rocket Launcher") {
+							FlxG.play(Imports.SOUND_LAUNCHER);
+						} else {
+							FlxG.play(Imports.SOUND_SHOOT_3);
+						}
+						
 						
 						for (var i:int = 1; i <= pellets; i++) {
 							spawn_bullet();
@@ -159,8 +161,10 @@ package guns
 		}
 		
 		private function reset_gun():void {
+			/*
 			orpm = convertRPM(gunstat.orpm);
 			brpm = convertRPM(gunstat.brpm);
+			*/
 			
 			if (burst == 0 || burst == -1) {
 				var temp:Number = orpm;
@@ -177,7 +181,7 @@ package guns
 		
 		private function convertRPM(rpm:Number):Number {
 			// assumes 60fps
-			return 3600 / gunstat.orpm;
+			return 3600 / rpm;
 		}
 		
 		private function decr_ammo():void {
