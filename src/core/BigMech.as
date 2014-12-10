@@ -233,7 +233,7 @@ package core
 				case 4:
 					// big mech will definitely choose to switch gun
 					weaponSlot = 1 - weaponSlot;
-					switch_weapon();
+					// switch_weapon();
 					step++;
 					
 					break;
@@ -259,7 +259,7 @@ package core
 			if (weaponSlot == 0) {
 				weapon = weapon1;
 			} else {
-				weapon = weapon2;
+				weapon = weapon3;
 			}
 			
 			if (Util.is_key(Util.RELOAD, true) && weapon.needReload()) {
@@ -354,9 +354,9 @@ package core
 			
 			var name:String = "";
 			if (weaponSlot == 0) {
-				name = weaponMapping[0][w1_lv];
+				name = weaponMapping[0][0];
 			} else {	// weaponSlot = 1
-				name = weaponMapping[1][w2_lv];
+				name = weaponMapping[1][0];
 			}
 			
 			weapon1 = Util.weapon_map_emitter("Light Machine Gun");
@@ -393,6 +393,7 @@ package core
 		
 		override public function reloadOp():void {
 			reloading = true;
+			FlxG.play(Imports.SOUND_RELOAD);
 		}
 		
 		override public function getHitBox():FlxSprite {

@@ -62,6 +62,7 @@ package {
 			add_bg();
 			
 			corpses.add(new KnightCorpse(320, 320, 30));
+			corpses.add(new BigMechCorpse(400, 320, 30));
 			
 			add_roadblocks();
 			
@@ -84,7 +85,7 @@ package {
 			
 			this.add(debug_text);
 			
-			// debug_text.text = corpses.members.length + "";
+			debug_text.text = corpses.members.length + "";
 			debug_text.visible = false;
 		}
 		
@@ -230,6 +231,9 @@ package {
 		
 		private function spawn_chars():void {
 			if (timer % spawn_wait == 1 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
+				var bigmech:BigMech = new BigMech(-200, 320);
+				chars.add(bigmech);
+				
 				var r:Number = 906;
 				var theta:Number = Util.float_random(0, 6.28);
 				
