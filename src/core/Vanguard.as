@@ -385,6 +385,7 @@ package core
 		
 		override public function reloadOp():void {
 			reloading = true;
+			FlxG.play(Imports.SOUND_RELOAD);
 			limbs.play("reload_" + weapon.type);
 		}
 		
