@@ -34,9 +34,9 @@ package core
 		public var giant:Boolean = false;		// giant characters should not be affected by roadblocks
 		
 		// health regen
-		protected var regen_rate:int = 6;		// 10 times/s
-		protected var regen_amount:int = 3;		// 30 /s
-		protected var regen_wait:int = 180;		// 3s
+		protected var regen_rate:int = 4;		// 15 times/s
+		protected var regen_amount:int = 3;		// 45 /s
+		protected var regen_wait:int = 150;		// 2.5s
 		protected var regen_wait_ctdown:int = 180;
 		protected var regen_ct:int = 0;
 		
@@ -236,6 +236,10 @@ package core
 		}
 		
 		public function getWeaponMapStat():Array {
+			return [];
+		}
+		
+		public function getWeaponLevel():Array {
 			return [];
 		}
 		

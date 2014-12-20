@@ -32,7 +32,7 @@ package {
 		public var _particles:FlxGroup = new FlxGroup();
 		public var roadblocks:FlxGroup = new FlxGroup();	// static
 		public var packets:FlxGroup = new FlxGroup();
-		public var corpses:FlxGroup = new FlxGroup(50);		// static
+		public var corpses:FlxGroup = new FlxGroup();		// static
 		
 		// in-game settings
 		public var bg:FlxSprite = new FlxSprite();
@@ -185,7 +185,7 @@ package {
 			
 			update_reticle();
 			if (!playing_music) {
-				FlxG.playMusic(Imports.SOUND_BGM, 0.6);
+				FlxG.playMusic(Imports.SOUND_BGM, 0.75);
 				playing_music = true;
 			}
 			
@@ -243,6 +243,10 @@ package {
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
 				} else {
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 2) * 10) {
+						var bigmech:BigMech = new BigMech(-200, 320);
+						chars.add(bigmech);
+					}
 					var vanguard:Vanguard = new Vanguard(x, y);
 					chars.add(vanguard);
 				}
@@ -409,11 +413,13 @@ package {
 				
 				var gun_text:String = "";
 				var ammo_text:String = "";
+				var suffix:String = "";
 				var weapon:BulletEmitter = player.getWeapon();
 				if (weapon != null) {
 					gun_text = weapon.name;
 					ammo_text = weapon.mag + " / " + weapon.backup_ammo();
 				}
+				
 				gun_info.text = "gun: " + gun_text;
 				ammo_info.text = "ammo: " + ammo_text;
 			}
@@ -473,6 +479,14 @@ package {
 				progress.vanguard[0] = w1_lv;
 				progress.vanguard[1] = w2_lv;
 			}
+		}
+		
+		public function add_corpse(corpse:Corpse):void {
+			// CORPSE_MAX is 50
+			if (corpses.length >= 50) {
+				corpses.remove(corpses.getFirstAlive(), true);
+			}
+			corpses.add(corpse);
 		}
 	}
 	

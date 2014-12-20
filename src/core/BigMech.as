@@ -52,7 +52,7 @@ package core
 			sprintSpeed = 1.2;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
-			max_hp = 1500;
+			max_hp = 1800;
 			regen_amount = 0;
 			giant = true;
 			rotation_spd = 1.5;
@@ -288,6 +288,10 @@ package core
 			}
 		}
 		
+		override public function getWeaponLevel():Array {
+			return [3, 3];
+		}
+		
 		// set up a random goal position, walk to it and returns whether the destination has been reached
 		override public function roam(renew:Boolean = false):Boolean {
 			// _g.debug_text.text = "roaming";
@@ -405,9 +409,10 @@ package core
 			_g._particles.add(explosion);
 			explosion.explode();
 			
-			// only 25 percent chance to spawn corpse on stage
-			if (Util.int_random(0, 1) == 0) {
-				_g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
+			// player controlled big mech will be destroyed!
+			if (!player_controlled) {
+				// _g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
+				_g.add_corpse(new BigMechCorpse(this.x(), this.y(), this.ang));
 			}
 			
 			if (!player_controlled) {

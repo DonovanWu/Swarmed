@@ -47,7 +47,8 @@ package core
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 300;
-			regen_amount = 2;
+			regen_amount = 2;	// 30/s
+			regen_wait = 180;	// 3s
 			
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
@@ -264,6 +265,10 @@ package core
 			return weapon;
 		}
 		
+		override public function getWeaponLevel():Array {
+			return [w1_lv, w2_lv];
+		}
+		
 		// set up a random goal position, walk to it and returns whether the destination has been reached
 		override public function roam(renew:Boolean = false):Boolean {
 			// _g.debug_text.text = "roaming";
@@ -399,7 +404,8 @@ package core
 			explosion.explode();
 			
 			// spawn a corpse on stage
-			_g.corpses.add(new VanguardCorpse(this.x(), this.y(), this.ang));
+			// _g.corpses.add(new VanguardCorpse(this.x(), this.y(), this.ang));
+			_g.add_corpse(new VanguardCorpse(this.x(), this.y(), this.ang));
 			
 			if (!player_controlled) {
 				// randomly spawn a weapon upgrade
@@ -433,6 +439,7 @@ package core
 				
 				if (exp[which][w_lv] <= 0) {
 					// upgrade!
+					FlxG.play(Imports.SOUND_LEVELUP);
 					if (which == 0) {
 						w1_lv++;
 						init_ammunition(1);

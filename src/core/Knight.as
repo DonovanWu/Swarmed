@@ -82,8 +82,6 @@ package core
 			// super code:
 			moveSpeed = walkSpeed;
 			hp = max_hp;
-			
-			
 		}
 		
 		protected function add_weapons():void {
@@ -179,7 +177,7 @@ package core
 							ang = ang + 360;
 						}
 						var dtheta:Number = (goal_angle - ang) / 10;
-						if (dtheta < rotation_spd) dtheta = rotation_spd;
+						if (Math.abs(dtheta) < rotation_spd) dtheta = Util.sig_n(goal_angle - ang) * rotation_spd;
 						ang += dtheta;
 					}
 					update_position();
@@ -264,6 +262,10 @@ package core
 		
 		override public function getWeapon():BulletEmitter {
 			return weapon;
+		}
+		
+		override public function getWeaponLevel():Array {
+			return [w1_lv, w2_lv];
 		}
 		
 		// set up a random goal position, walk to it and returns whether the destination has been reached
@@ -402,7 +404,8 @@ package core
 			explosion.explode();
 			
 			// spawn a corpse on stage
-			_g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
+			// _g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
+			_g.add_corpse(new KnightCorpse(this.x(), this.y(), ang));
 			
 			if (!player_controlled) {
 				// randomly spawn a weapon upgrade
@@ -436,6 +439,7 @@ package core
 				
 				if (exp[which][w_lv] <= 0) {
 					// upgrade!
+					FlxG.play(Imports.SOUND_LEVELUP);
 					if (which == 0) {
 						w1_lv++;
 						init_ammunition(1);
