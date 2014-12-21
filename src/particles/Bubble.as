@@ -17,7 +17,7 @@ package particles
 			this.x = x;
 			this.y = y;
 			this._ang = ang * Util.DEG2RAD;
-			this._vel = Util.float_random(1, 2);
+			this._vel = Util.float_random(1, 1.5);
 			this.loadGraphic(Imports.IMPORT_BUBBLE);
 			
 			this.angle = Util.float_random( -15, 15);

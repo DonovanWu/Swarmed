@@ -410,7 +410,7 @@ package core
 			explosion.explode();
 			
 			// player controlled big mech will be destroyed!
-			if (!player_controlled) {
+			if (!player_controlled && !(_g.player is BigMech)) {
 				// _g.corpses.add(new BigMechCorpse(this.x(), this.y(), this.ang));
 				_g.add_corpse(new BigMechCorpse(this.x(), this.y(), this.ang));
 			}
