@@ -19,7 +19,6 @@ package {
 		public var tutorialObjs:FlxGroup = new FlxGroup();
 		public static var tutor_timer:int = Util.TUTOR_TIMER;
 		public var title:Boolean = true;
-		public var kill_count:int = 0;
 		
 		// status bar
 		public var status_bar:FlxSprite = new FlxSprite();
@@ -58,8 +57,6 @@ package {
 		
 		override public function create():void {
 			super.create();
-			
-			kill_count = 0;
 			
 			// layer: bottom
 			add_bg();

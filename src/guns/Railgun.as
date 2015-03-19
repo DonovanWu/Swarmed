@@ -9,12 +9,12 @@ package guns
 		
 		public function Railgun() 
 		{
-			// use different bullet?
+			// different bullet
 			super( {
 				name : "Railgun",
 				mobility : 0.9,
 				ads_multi : 0.5,
-				speed : 10,
+				speed : 15,
 				orpm : 60,
 				damage : 450,
 				burst : 1,

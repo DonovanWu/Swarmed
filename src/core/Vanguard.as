@@ -410,12 +410,10 @@ package core
 			_g.add_corpse(new VanguardCorpse(this.x(), this.y(), this.ang));
 			
 			if (!player_controlled) {
-				_g.kill_count++;
-				
-				if (_g.kill_count == 1) {
+				if (_g.kills == 0) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (_g.kill_count == 2) {
+				} else if (_g.kills == 1) {
 					// weapon 2 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 1));
 				} else {
