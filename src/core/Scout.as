@@ -1,14 +1,10 @@
 package core 
 {
-	import gameobj.Packet;
-	import guns.*;
-	import particles.Explosion;
-	import org.flixel.*;
 	/**
-	 * 
-	 * @author Wenrui (Donovan) Wu
+	 * ...
+	 * @author ...
 	 */
-	public class Knight extends Character
+	public class Scout extends Character
 	{
 		public var body:FlxSprite = new FlxSprite();
 		public var limbs:FlxSprite = new FlxSprite();
@@ -21,8 +17,8 @@ package core
 		public var w1_lv:int;	// level for weapon 1
 		public var w2_lv:int;	// level for weapon 2
 		
-		public const weaponMapping:Object = [["Revolver", "Marksman Rifle", "Assualt Rifle"],
-											["Handgun", "Machine Pistol", "Submachine Gun"]];
+		public const weaponMapping:Object = [["Hunting Rifle", "Sniper Rifle", "Railgun", "Anti-materiel Rifle"],
+											["Handgun", "Combat Shotgun", "Submachine Gun", "AK47"]];
 											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
@@ -31,7 +27,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[25, 210, false], [25, 210, false]];
+		protected var exp:Array = [[180, 240, 360, false], [180, 240, 360, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -39,7 +35,7 @@ package core
 		private var wait:int = -1;
 		public var waypoint:FlxPoint;
 		
-		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
+		public function Scout(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
 			walkSpeed = 1.5;

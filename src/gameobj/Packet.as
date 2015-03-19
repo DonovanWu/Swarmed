@@ -16,7 +16,7 @@ package gameobj
 		}
 		
 		public function getAmount():int {
-			return Util.int_random(20, 50);
+			return Util.int_random(30, 50);
 		}
 	}
 

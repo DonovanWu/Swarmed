@@ -416,6 +416,7 @@ package core
 			}
 			
 			if (!player_controlled) {
+				_g.kill_count++;
 				// spawn three packs
 				_g.packets.add(new Packet(this.x(), this.y() - 5, 2));
 				_g.packets.add(new Packet(this.x() - 5, this.y(), 0));

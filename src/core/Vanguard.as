@@ -31,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[75, 120, 200, false], [75, 120, 200, false]];
+		protected var exp:Array = [[25, 160, 240, false], [25, 160, 240, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -42,13 +42,15 @@ package core
 		public function Vanguard(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.0;
-			sprintSpeed = 1.8;
+			walkSpeed = 1.2;
+			sprintSpeed = 2.0;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 300;
 			regen_amount = 2;	// 30/s
-			regen_wait = 180;	// 3s
+			regen_wait = 120;	// 2s
+			
+			rotation_spd = 1.5;	// 90 degree/s
 			
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
@@ -408,14 +410,24 @@ package core
 			_g.add_corpse(new VanguardCorpse(this.x(), this.y(), this.ang));
 			
 			if (!player_controlled) {
-				// randomly spawn a weapon upgrade
-				var r:Number = Util.float_random(0, 100);
-				if (r < 30) {
+				_g.kill_count++;
+				
+				if (_g.kill_count == 1) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (r > 70) {
+				} else if (_g.kill_count == 2) {
 					// weapon 2 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 1));
+				} else {
+					// randomly spawn a weapon upgrade
+					var r:Number = Util.float_random(0, 100);
+					if (r < 30) {
+						// weapon 1 upgrade
+						_g.packets.add(new Packet(this.x(), this.y(), 0));
+					} else if (r > 70) {
+						// weapon 2 upgrade
+						_g.packets.add(new Packet(this.x(), this.y(), 1));
+					}
 				}
 			}
 			
