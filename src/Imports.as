@@ -47,6 +47,12 @@ package  {
 		[Embed( source = "../resc/guns/Revolver.png" )] public static var GUN_REVOLVER:Class;
 		[Embed( source = "../resc/guns/TacticalShotgun.png" )] public static var GUN_TACTICAL_SHOTGUN:Class;
 		[Embed( source = "../resc/guns/SubmachineGun.png" )] public static var GUN_SUBMACHINE_GUN:Class;
+		[Embed( source = "../resc/guns/AK47.png" )] public static var GUN_AK47:Class;
+		[Embed( source = "../resc/guns/CombatShotgun.png" )] public static var GUN_COMBAT_SHOTGUN:Class;
+		[Embed( source = "../resc/guns/HuntingRifle.png" )] public static var GUN_HUNTING_RIFLE:Class;
+		[Embed( source = "../resc/guns/SniperRifle.png" )] public static var GUN_SNIPER_RIFLE:Class;
+		[Embed( source = "../resc/guns/Railgun.png" )] public static var GUN_RAILGUN:Class;
+		[Embed( source = "../resc/guns/AMR.png" )] public static var GUN_AMR:Class;
 		
 // sound
 		[Embed( source = "../resc/sound/sfx_explosion.mp3" )] public static var SOUND_EXPLOSION:Class;

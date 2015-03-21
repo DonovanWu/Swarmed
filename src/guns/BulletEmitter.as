@@ -91,8 +91,11 @@ package guns
 						
 						if (name == "Rocket Launcher") {
 							FlxG.play(Imports.SOUND_LAUNCHER);
+						} else if (name == "") {
+							FlxG.play(Imports.SOUND_SHOOT_3);
 						} else {
 							FlxG.play(Imports.SOUND_SHOOT_3);
+						}
 						}
 						
 						
