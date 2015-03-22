@@ -437,7 +437,7 @@ package core
 		override public function gainExp(amount:int, which:int):void {
 			// _g.debug_text.text = "xp gained!"
 			
-			FlxG.play(Imports.SOUND_SCORE, 0.5);
+			FlxG.play(Imports.SOUND_SCORE, 0.3);
 			
 			var w_lv:int = 0;
 			if (which == 0) {
@@ -451,7 +451,7 @@ package core
 				
 				if (exp[which][w_lv] <= 0) {
 					// upgrade!
-					FlxG.play(Imports.SOUND_LEVELUP, 0.5);
+					FlxG.play(Imports.SOUND_LEVELUP, 0.3);
 					if (which == 0) {
 						w1_lv++;
 						init_ammunition(1);

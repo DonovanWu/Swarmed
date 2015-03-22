@@ -39,6 +39,7 @@ package {
 		public var player:Character;
 		public var reticle:FlxSprite = new FlxSprite();
 		public var title_screen:FlxSprite = new FlxSprite();
+		public var camera_icon:FlxSprite = new FlxSprite();
 		
 		// save
 		public var progress:Object = { knight:[0, 0], vanguard:[0, 0], scout: [0, 0], bigmech:[0, 0]};
@@ -59,10 +60,12 @@ package {
 		override public function create():void {
 			super.create();
 			
+			FlxG.worldBounds = new FlxRect(0, 0, 1280, 1280);
+			
 			// layer: bottom
 			add_bg();
 			
-			corpses.add(new KnightCorpse(320, 320, 30));
+			corpses.add(new KnightCorpse(640, 640, 30));
 			// corpses.add(new BigMechCorpse(400, 320, 30));
 			// corpses.add(new ScoutCorpse(320, 320, 30));
 			
@@ -82,11 +85,18 @@ package {
 			add_tutorial_objs();
 			add_reticle();
 			
+			camera_icon.visible = false;		// turn visible for debugging
+			this.add(_camera_icon);
+			
+			FlxG.camera.follow(_camera_icon);
+			var stgw:Number = FlxG.stage.stageWidth / 4; var stgh:Number = FlxG.stage.stageHeight / 4;
+			FlxG.camera.setBounds( -stgw, -stgh, _level.wid() + stgw * 2, _level.hei() + stgh * 2);
+			
 			title_screen.loadGraphic(Imports.IMPORT_TITLE);
 			this.add(title_screen);
+			title_screen.set_position(camera_icon.x, camera_icon.y);
 			
 			this.add(debug_text);
-			
 			debug_text.text = corpses.members.length + "";
 			debug_text.visible = false;
 		}
@@ -354,7 +364,7 @@ package {
 								char.gainExp(item.getAmount(), int(item.frame));
 							} else {
 								// pick up ammo
-								FlxG.play(Imports.SOUND_SCORE);
+								FlxG.play(Imports.SOUND_SCORE, 0.3);
 								char.getWeapon().replenishAmmo(item.getAmount());
 							}
 							packets.remove(item);

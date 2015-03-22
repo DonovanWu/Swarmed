@@ -92,11 +92,11 @@ package guns
 						
 						
 						if (name == "Rocket Launcher") {
-							FlxG.play(Imports.SOUND_LAUNCHER);
+							FlxG.play(Imports.SOUND_LAUNCHER, 0.7);
 						} else if (name == "Hunting Rifle" || name == "Sniper Rifle" || name == "Railgun" || name == "Anti-materiel Rifle") {
-							FlxG.play(Imports.SOUND_SNIPER, 0.4);
+							FlxG.play(Imports.SOUND_SNIPER, 0.3);
 						} else {
-							FlxG.play(Imports.SOUND_SHOOT_3, 0.7);
+							FlxG.play(Imports.SOUND_SHOOT_3, 0.6);
 						}
 						
 						for (var i:int = 1; i <= pellets; i++) {

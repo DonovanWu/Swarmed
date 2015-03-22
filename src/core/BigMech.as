@@ -429,7 +429,7 @@ package core
 		}
 		
 		override public function gainExp(amount:int, which:int):void {
-			FlxG.play(Imports.SOUND_SCORE, 0.5);
+			FlxG.play(Imports.SOUND_SCORE, 0.3);
 			
 			var w_lv:int = 0;
 			if (which == 0) {
