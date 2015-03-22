@@ -232,22 +232,23 @@ package {
 		private function spawn_chars():void {
 			if (timer % spawn_wait == 1 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
 				
-				var r:Number = 600;		// 906
+				var r:Number = 720;
 				var theta:Number = Util.float_random(0, 6.28);
 				
 				var x:Number = r * Math.cos(theta) + 320;
 				var y:Number = r * Math.sin(theta) + 320;
 				
+				/*
 				// only spawn scout for testing
 				var scout:Scout = new Scout(x, y);
 				chars.add(scout);
+				*/
 				
-				/*
 				var choice:int = Util.float_random(0, 100);
 				if (choice < 50) {
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
-					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 0) * 10) {
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] - 2) * 10) {
 						var scout:Scout = new Scout(x, y);
 						chars.add(scout);
 					}
@@ -259,25 +260,27 @@ package {
 					var vanguard:Vanguard = new Vanguard(x, y);
 					chars.add(vanguard);
 				}
-				*/
 			}
 		}
 		
 		private function spawn_swarm():void {
-			if (kills % 25 == 10) {
+			if (kills % 25 == 15) {
 				// every 10 kills will have a wave including multiple vanguards, knight and a big mech
 				for (var i:int = 0; i < 4; i++ ) {
-					var r:Number = 906;
-					var thetha:Number = Util.float_random(0, 6.28);
+					var r:Number = 900;
+					var theta:Number = Util.float_random(0, 6.28);
 					
-					var x:Number = r * Math.cos(thetha);
-					var y:Number = r * Math.sin(thetha);
+					var x:Number = r * Math.cos(theta) + 320;
+					var y:Number = r * Math.sin(theta) + 320;
 					
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
 					var vanguard:Vanguard = new Vanguard(x, y);
 					chars.add(vanguard);
 				}
+				
+				var scout:Scout = new Scout(800, 320);
+				chars.add(scout);
 				
 				// one big mech
 				var bigmech:BigMech = new BigMech(-200, 320);

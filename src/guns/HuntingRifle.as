@@ -12,7 +12,7 @@ package guns
 			super( {
 				name : "Hunting Rifle",
 				mobility : 0.9,
-				ads_multi : 0.5,
+				ads_multi : 0.6,
 				speed : 10,
 				orpm : 80,
 				damage : 199,

@@ -31,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[75, 120, 360, false], [120, 210, 300, false]];
+		protected var exp:Array = [[75, 120, 450, false], [120, 210, 320, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -42,11 +42,11 @@ package core
 		public function Scout(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.8;
+			walkSpeed = 1.6;
 			sprintSpeed = 2.5;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
-			max_hp = 200;
+			max_hp = 240;
 			regen_amount = 3;	// 45/s
 			regen_wait = 100;	// 1.67s
 			

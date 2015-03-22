@@ -13,7 +13,7 @@ package guns
 			super( {
 				name : "Sniper Rifle",
 				mobility : 0.9,
-				ads_multi : 0.5,
+				ads_multi : 0.6,
 				speed : 15,
 				orpm : 60,
 				damage : 273,

@@ -11,7 +11,7 @@ package guns
 		{
 			super( {
 				name : "Anti-materiel Rifle",
-				mobility : 0.9,
+				mobility : 0.8,
 				ads_multi : 0.5,
 				speed : 10,
 				orpm : 450,
