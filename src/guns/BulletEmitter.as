@@ -91,13 +91,11 @@ package guns
 						
 						if (name == "Rocket Launcher") {
 							FlxG.play(Imports.SOUND_LAUNCHER);
-						} else if (name == "") {
+						} else if (name == "Hunting Rifle" || name == "Sniper Rifle" || name == "Railgun" || name == "Anti-materiel Rifle") {
 							FlxG.play(Imports.SOUND_SHOOT_3);
 						} else {
 							FlxG.play(Imports.SOUND_SHOOT_3);
 						}
-						}
-						
 						
 						for (var i:int = 1; i <= pellets; i++) {
 							spawn_bullet();
@@ -249,8 +247,14 @@ package guns
 			var range:Number = (gunstat.range == null)?930:gunstat.range;
 			var bullet:Bullet = new Bullet(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage, range);
 			
-			if (gunstat.spawn != null && gunstat.spawn == "rocket") {
-				bullet = new Torpedo(muzzle_pos.x, muzzle_pos.y, theta);
+			if (gunstat.spawn != null) {
+				if (gunstat.spawn == "rocket") {
+					bullet = new Torpedo(muzzle_pos.x, muzzle_pos.y, theta);
+				} else if (gunstat.spawn == "sniper") {
+					// spawn sniper round
+				} else if (gunstat.spawn == "railgun") {
+					// spawn railgun round
+				}
 			}
 			
 			_g.bullets.add(bullet);

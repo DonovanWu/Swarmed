@@ -16,12 +16,13 @@ package guns
 				ads_multi : 0.5,
 				speed : 15,
 				orpm : 60,
-				damage : 450,
+				damage : 500,
 				burst : 1,
 				pellets: 1,
 				mag_size : 1,
 				ammo: 30,
-				spread : { hip : 10, aim : 0 }
+				spread : { hip : 10, aim : 0 },
+				spawn : "railgun"
 			});
 		}
 		

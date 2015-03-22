@@ -20,7 +20,8 @@ package guns
 				pellets: 1,
 				mag_size : 8,
 				ammo: 32,
-				spread : { hip : 20, aim : 0 }
+				spread : { hip : 20, aim : 0 },
+				spawn : "sniper"
 			});
 		}
 		

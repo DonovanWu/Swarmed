@@ -15,13 +15,14 @@ package guns
 				mobility : 0.9,
 				ads_multi : 0.5,
 				speed : 15,
-				orpm : 80,
-				damage : 261,
+				orpm : 60,
+				damage : 273,
 				burst : 1,
 				pellets: 1,
 				mag_size : 5,
 				ammo: 30,
-				spread : { hip : 15, aim : 0 }
+				spread : { hip : 15, aim : 0 },
+				spawn : "sniper"
 			});
 		}
 		

@@ -34,6 +34,8 @@ package  {
 		[Embed( source = "../resc/chars/knight_corpse.png" )] public static var KNIGHT_CORPSE:Class;
 		[Embed( source = "../resc/chars/vanguard_corpse.png" )] public static var VANGUARD_CORPSE:Class;
 		[Embed( source = "../resc/chars/BigMechCorpse.png" )] public static var BIGMECH_CORPSE:Class;
+		[Embed( source = "../resc/chars/scout_body.png" )] public static var SCOUT_BODY:Class;
+		[Embed( source = "../resc/chars/scout_corpse.png" )] public static var SCOUT_CORPSE:Class;
 		
 // weapon sprites
 		[Embed( source = "../resc/guns/AssaultRifle.png" )] public static var GUN_ASSAULT_RIFLE:Class;

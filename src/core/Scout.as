@@ -1,8 +1,12 @@
 package core 
 {
+	import gameobj.Packet;
+	import guns.*;
+	import particles.Explosion;
+	import org.flixel.*;
 	/**
-	 * ...
-	 * @author ...
+	 * 
+	 * @author Wenrui (Donovan) Wu
 	 */
 	public class Scout extends Character
 	{
@@ -18,7 +22,7 @@ package core
 		public var w2_lv:int;	// level for weapon 2
 		
 		public const weaponMapping:Object = [["Hunting Rifle", "Sniper Rifle", "Railgun", "Anti-materiel Rifle"],
-											["Handgun", "Combat Shotgun", "Submachine Gun", "AK47"]];
+											["Handgun", "Machine Pistol", "Combat Shotgun", "AK47"]];
 											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
@@ -27,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[60, 120, 400, false], [160, 240, 320, false]];
+		protected var exp:Array = [[75, 120, 360, false], [120, 210, 300, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -38,7 +42,7 @@ package core
 		public function Scout(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.5;
+			walkSpeed = 1.8;
 			sprintSpeed = 2.5;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
@@ -51,11 +55,11 @@ package core
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
 				w1_lv = Util.int_random(0, 2);
-				w2_lv = Util.int_random(0, 2);
+				w2_lv = Util.int_random(0, 3);
 				shoot_span = Util.int_random(45, 75);
 			}
 			
-			body.loadGraphic(Imports.KNIGHT_BODY);
+			body.loadGraphic(Imports.SCOUT_BODY);
 			
 			limbs.loadGraphic(Imports.KNIGHT_LIMBS, true, false, 60, 45);
 			limbs.origin.x = body.width / 2;
@@ -185,6 +189,7 @@ package core
 					
 				case 2:
 					// shoot for some while
+					stance = "aim";
 					_ct++;
 					if (_ct <= shoot_span) {
 						shoot_p = true;
@@ -206,6 +211,7 @@ package core
 					
 				case 3:
 					// choose to rest for a random while
+					stance = "hip";
 					if (wait < 0) {
 						// initialize wait
 						wait = Util.int_random(0, 4) * 20;
@@ -403,15 +409,13 @@ package core
 			
 			// spawn a corpse on stage
 			// _g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
-			_g.add_corpse(new KnightCorpse(this.x(), this.y(), ang));
+			_g.add_corpse(new ScoutCorpse(this.x(), this.y(), ang));
 			
 			if (!player_controlled) {
-				_g.kill_count++;
-				
-				if (_g.kill_count == 1) {
+				if (_g.kills == 0) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));
-				} else if (_g.kill_count == 2) {
+				} else if (_g.kills == 1) {
 					// weapon 2 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 1));
 				} else {
@@ -456,7 +460,7 @@ package core
 						init_ammunition(2);
 					}
 					weaponSlot = which;
-					_g.update_progress(w1_lv, w2_lv, "knight");
+					_g.update_progress(w1_lv, w2_lv, "scout");
 					switch_weapon();
 				}
 			}

@@ -41,7 +41,7 @@ package {
 		public var title_screen:FlxSprite = new FlxSprite();
 		
 		// save
-		public var progress:Object = { knight:[0, 0], vanguard:[0, 0], bigmech:[0, 0]};
+		public var progress:Object = { knight:[0, 0], vanguard:[0, 0], scout: [0, 0], bigmech:[0, 0]};
 		public var ammunition:Array = [{ mag:1, ammo:1 }, { mag:1, ammo:1 }, {mag:1, ammo:1}];
 		
 		// game mechanics
@@ -63,6 +63,7 @@ package {
 			
 			corpses.add(new KnightCorpse(320, 320, 30));
 			// corpses.add(new BigMechCorpse(400, 320, 30));
+			// corpses.add(new ScoutCorpse(320, 320, 30));
 			
 			add_roadblocks();
 			
@@ -86,7 +87,7 @@ package {
 			this.add(debug_text);
 			
 			debug_text.text = corpses.members.length + "";
-			debug_text.visible = false;
+			debug_text.visible = true;
 		}
 		
 		public function add_bg():void {
@@ -124,7 +125,6 @@ package {
 			*/
 			var me:BigMech = new BigMech(320, 320, progress.bigmech[0], progress.bigmech[1], true);
 			chars.add(me);
-			
 			
 			// test object
 			var knight2:Knight = new Knight(80, 320);
@@ -185,7 +185,7 @@ package {
 			
 			update_reticle();
 			if (!playing_music) {
-				FlxG.playMusic(Imports.SOUND_BGM, 0.75);
+				FlxG.playMusic(Imports.SOUND_BGM, 0.8);
 				playing_music = true;
 			}
 			
@@ -232,16 +232,25 @@ package {
 		private function spawn_chars():void {
 			if (timer % spawn_wait == 1 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
 				
-				var r:Number = 906;
+				var r:Number = 600;		// 906
 				var theta:Number = Util.float_random(0, 6.28);
 				
-				var x:Number = r * Math.cos(theta);
-				var y:Number = r * Math.sin(theta);
+				var x:Number = r * Math.cos(theta) + 320;
+				var y:Number = r * Math.sin(theta) + 320;
 				
+				// only spawn scout for testing
+				var scout:Scout = new Scout(x, y);
+				chars.add(scout);
+				
+				/*
 				var choice:int = Util.float_random(0, 100);
 				if (choice < 50) {
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 0) * 10) {
+						var scout:Scout = new Scout(x, y);
+						chars.add(scout);
+					}
 				} else {
 					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 2) * 10) {
 						var bigmech:BigMech = new BigMech(-200, 320);
@@ -250,6 +259,7 @@ package {
 					var vanguard:Vanguard = new Vanguard(x, y);
 					chars.add(vanguard);
 				}
+				*/
 			}
 		}
 		
@@ -460,6 +470,17 @@ package {
 			}
 		}
 		
+		public function revive_scout(x:Number, y:Number, corpse:Corpse):void {
+			if (can_revive) {
+				var scout:Scout = new Scout(x, y, progress.scout[0], progress.scout[1], true);
+				chars.add(scout);
+				player = scout;
+				
+				corpses.remove(corpse);
+				can_revive = false;
+			}
+		}
+		
 		public function revive_bigmech(x:Number, y:Number, corpse:Corpse):void {
 			if (can_revive) {
 				var knight:BigMech = new BigMech(x, y, 0, 0, true);
@@ -478,6 +499,9 @@ package {
 			} else if (which == "vanguard") {
 				progress.vanguard[0] = w1_lv;
 				progress.vanguard[1] = w2_lv;
+			} else if (which == "scout") {
+				progress.scout[0] = w1_lv;
+				progress.scout[1] = w2_lv;
 			}
 		}
 		

@@ -237,6 +237,18 @@ package  {
 					return new Revolver();
 				case "Rocket Launcher":
 					return new RocketLauncher();
+				case "Combat Shotgun":
+					return new CombatShotgun();
+				case "AK47":
+					return new AK47();
+				case "Hunting Rifle":
+					return new HuntingRifle();
+				case "Sniper Rifle":
+					return new SniperRifle();
+				case "Railgun":
+					return new Railgun();
+				case "Anti-materiel Rifle":
+					return new AMR();
 				default:
 					// case "Submachine Gun":
 					return new SubmachineGun();
@@ -268,17 +280,17 @@ package  {
 				case "Submachine Gun":
 					return Imports.GUN_SUBMACHINE_GUN;
 				case "Combat Shotgun":
-					return null;
+					return Imports.GUN_COMBAT_SHOTGUN;
 				case "AK47":
-					return null;
+					return Imports.GUN_AK47;
 				case "Hunting Rifle":
-					return null;
+					return Imports.GUN_HUNTING_RIFLE;
 				case "Sniper Rifle":
-					return null;
+					return Imports.GUN_SNIPER_RIFLE;
 				case "Railgun":
-					return null;
+					return Imports.GUN_RAILGUN;
 				case "Anti-materiel Rifle":
-					return null;
+					return Imports.GUN_AMR;
 				default:
 					return null;
 			}
