@@ -14,7 +14,7 @@ package guns
 				name : "Sniper Rifle",
 				mobility : 0.9,
 				ads_multi : 0.6,
-				speed : 15,
+				speed : 12,
 				orpm : 50,
 				damage : 273,
 				burst : 1,

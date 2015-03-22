@@ -31,7 +31,8 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[75, 120, 450, false], [120, 210, 320, false]];
+		// protected var exp:Array = [[75, 120, 450, false], [120, 210, 320, false]];
+		protected var exp:Array = [[25, 60, 60, false], [30, 60, 60, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -346,6 +347,7 @@ package core
 		
 		private function switch_weapon():void {
 			stance = "hip";
+			reloading = false;
 			
 			var name:String = "";
 			if (weaponSlot == 0) {
@@ -437,7 +439,7 @@ package core
 		override public function gainExp(amount:int, which:int):void {
 			// _g.debug_text.text = "xp gained!"
 			
-			FlxG.play(Imports.SOUND_SCORE);
+			FlxG.play(Imports.SOUND_SCORE, 0.5);
 			
 			var w_lv:int = 0;
 			if (which == 0) {
@@ -451,7 +453,7 @@ package core
 				
 				if (exp[which][w_lv] <= 0) {
 					// upgrade!
-					FlxG.play(Imports.SOUND_LEVELUP);
+					FlxG.play(Imports.SOUND_LEVELUP, 0.5);
 					if (which == 0) {
 						w1_lv++;
 						init_ammunition(1);

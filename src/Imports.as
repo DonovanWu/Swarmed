@@ -67,5 +67,6 @@ package  {
 		[Embed( source = "../resc/sound/bgm.mp3" )] public static var SOUND_BGM:Class;
 		[Embed( source = "../resc/sound/reload.mp3" )] public static var SOUND_RELOAD:Class;
 		[Embed( source = "../resc/sound/sfx_levelup.mp3" )] public static var SOUND_LEVELUP:Class;
+		[Embed( source = "../resc/sound/sfx_sniper.mp3" )] public static var SOUND_SNIPER:Class;
 	}
 }

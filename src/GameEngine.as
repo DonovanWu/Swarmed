@@ -54,6 +54,7 @@ package {
 		public var game_status:String = "title";	// title, in-game, gameover
 		public var init:Boolean = false;
 		public var playing_music:Boolean = false;
+		public var swarms:int = 0;
 		
 		override public function create():void {
 			super.create();
@@ -61,9 +62,9 @@ package {
 			// layer: bottom
 			add_bg();
 			
-			// corpses.add(new KnightCorpse(320, 320, 30));
+			corpses.add(new KnightCorpse(320, 320, 30));
 			// corpses.add(new BigMechCorpse(400, 320, 30));
-			corpses.add(new ScoutCorpse(320, 320, 30));
+			// corpses.add(new ScoutCorpse(320, 320, 30));
 			
 			add_roadblocks();
 			
@@ -283,11 +284,12 @@ package {
 				chars.add(scout);
 				
 				// one big mech
-				var bigmech:BigMech = new BigMech(-200, 320);
+				var bigmech:BigMech = new BigMech(-200, 320, 0, 0, false, swarms);
 				chars.add(bigmech);
 				
 				kills++;	// therefore kills is no longer an accurate count of things ... ;_;
 				// ending up with add 10 more kills to kill so...
+				swarms++;
 				
 				// TODO: warns swarm in bound
 			}

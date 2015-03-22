@@ -50,7 +50,7 @@ package core
 			regen_amount = 3;	// 45/s
 			regen_wait = 100;	// 1.67s
 			
-			rotation_spd = 2;	// 120 degree/s
+			rotation_spd = 1.5;	// 90 degree/s
 			
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
@@ -344,6 +344,7 @@ package core
 		
 		private function switch_weapon():void {
 			stance = "hip";
+			reloading = false;
 			
 			var name:String = "";
 			if (weaponSlot == 0) {
@@ -435,7 +436,7 @@ package core
 		override public function gainExp(amount:int, which:int):void {
 			// _g.debug_text.text = "xp gained!"
 			
-			FlxG.play(Imports.SOUND_SCORE);
+			FlxG.play(Imports.SOUND_SCORE, 0.5);
 			
 			var w_lv:int = 0;
 			if (which == 0) {
@@ -449,7 +450,7 @@ package core
 				
 				if (exp[which][w_lv] <= 0) {
 					// upgrade!
-					FlxG.play(Imports.SOUND_LEVELUP);
+					FlxG.play(Imports.SOUND_LEVELUP, 0.5);
 					if (which == 0) {
 						w1_lv++;
 						init_ammunition(1);

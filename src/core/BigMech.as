@@ -45,7 +45,7 @@ package core
 		private var wait:int = -1;
 		public var waypoint:FlxPoint;
 		
-		public function BigMech(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
+		public function BigMech(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false, swarms:int = 0) {
 			// character data
 			player_controlled = human;
 			walkSpeed = 1.0;
@@ -59,6 +59,7 @@ package core
 			
 			if (!player_controlled) {
 				shoot_span = Util.int_random(45, 75);
+				max_hp = 900 * (2 + swarms);
 			}
 			
 			body.loadGraphic(Imports.BIGMECH_BODY);
@@ -110,6 +111,7 @@ package core
 		}
 		
 		override protected function update_weapon():void {
+			_g.debug_text.text = "" + max_hp;
 			if (reloading) {
 				stance = "hip";
 				ct_reload_time++;
@@ -355,6 +357,7 @@ package core
 		
 		private function switch_weapon():void {
 			stance = "hip";
+			reloading = false;
 			
 			var name:String = "";
 			if (weaponSlot == 0) {
@@ -426,7 +429,7 @@ package core
 		}
 		
 		override public function gainExp(amount:int, which:int):void {
-			FlxG.play(Imports.SOUND_SCORE);
+			FlxG.play(Imports.SOUND_SCORE, 0.5);
 			
 			var w_lv:int = 0;
 			if (which == 0) {
