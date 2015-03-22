@@ -15,7 +15,7 @@ package guns
 				mobility : 0.9,
 				ads_multi : 0.6,
 				speed : 15,
-				orpm : 60,
+				orpm : 50,
 				damage : 273,
 				burst : 1,
 				pellets: 1,

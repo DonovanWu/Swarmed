@@ -61,9 +61,9 @@ package {
 			// layer: bottom
 			add_bg();
 			
-			corpses.add(new KnightCorpse(320, 320, 30));
+			// corpses.add(new KnightCorpse(320, 320, 30));
 			// corpses.add(new BigMechCorpse(400, 320, 30));
-			// corpses.add(new ScoutCorpse(320, 320, 30));
+			corpses.add(new ScoutCorpse(320, 320, 30));
 			
 			add_roadblocks();
 			
@@ -87,7 +87,7 @@ package {
 			this.add(debug_text);
 			
 			debug_text.text = corpses.members.length + "";
-			debug_text.visible = true;
+			debug_text.visible = false;
 		}
 		
 		public function add_bg():void {

@@ -3,6 +3,8 @@ package guns
 	import core.Character;
 	import org.flixel.*;
 	import particles.Bullet;
+	import particles.RailgunRound;
+	import particles.SniperRound;
 	import particles.Torpedo;
 	/**
 	 * ...
@@ -252,8 +254,9 @@ package guns
 					bullet = new Torpedo(muzzle_pos.x, muzzle_pos.y, theta);
 				} else if (gunstat.spawn == "sniper") {
 					// spawn sniper round
+					bullet = new SniperRound(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage, range);
 				} else if (gunstat.spawn == "railgun") {
-					// spawn railgun round
+					bullet = new RailgunRound(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage, range);
 				}
 			}
 			
