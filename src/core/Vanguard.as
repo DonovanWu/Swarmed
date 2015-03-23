@@ -31,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[25, 160, 240, false], [25, 160, 240, false]];
+		protected var exp:Array = [[60, 160, 240, false], [60, 160, 240, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;

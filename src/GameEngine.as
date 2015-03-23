@@ -68,8 +68,8 @@ package {
 			add_bg();
 			
 			corpses.add(new KnightCorpse(640, 640, 30));
-			// corpses.add(new BigMechCorpse(400, 320, 30));
-			// corpses.add(new ScoutCorpse(320, 320, 30));
+			// corpses.add(new BigMechCorpse(640, 640, 30));
+			// corpses.add(new ScoutCorpse(640, 640, 30));
 			
 			add_roadblocks();
 			
@@ -202,7 +202,7 @@ package {
 			
 			update_reticle();
 			if (!playing_music) {
-				FlxG.playMusic(Imports.SOUND_BGM, 0.8);
+				FlxG.playMusic(Imports.SOUND_BGM);
 				playing_music = true;
 			}
 			
@@ -274,7 +274,7 @@ package {
 						chars.add(scout);
 					}
 				} else {
-					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 2) * 10) {
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 1) * 10) {
 						var bigmech:BigMech = new BigMech(-200, 320);
 						chars.add(bigmech);
 					}
@@ -288,6 +288,7 @@ package {
 			if (kills % 30 == 15) {
 				// TODO: warns swarm in bound
 				FlxG.flash(0x20990000);
+				FlxG.play(Imports.SOUND_ALARM);
 				warning.play("warn");
 				
 				// every certain amount of kills will have a wave of swarm
@@ -306,14 +307,14 @@ package {
 					chars.add(vanguard);
 				}
 				
-				var scout:Scout = new Scout(800, -100);
-				chars.add(scout);
+				var scout1:Scout = new Scout(800, -100);
+				chars.add(scout1);
+				var scout2:Scout = new Scout(800, 1320);
+				chars.add(scout2);
 				
 				// one big mech
-				var bigmech1:BigMech = new BigMech(-200, 320, 0, 0, false, swarms);
-				chars.add(bigmech1);
-				var bigmech2:BigMech = new BigMech(1320, 320, 0, 0, false, swarms);
-				chars.add(bigmech2);
+				var bigmech:BigMech = new BigMech(-200, 320, 0, 0, false, swarms);
+				chars.add(bigmech);
 				
 				kills++;	// therefore kills is no longer an accurate count of things ... ;_;
 				// ending up with add 10 more kills to kill so...
@@ -473,7 +474,7 @@ package {
 				gun_info.set_position(init_pos.x + 170, text_y);
 				ammo_info.set_position(init_pos.x + 480, text_y);
 				
-				warning.set_position(camera_icon.x - warning.width / 2, camera_icon.y - warning.height / 2);
+				warning.set_position(camera_icon.x - warning.width / 2, camera_icon.y - warning.height);
 			}
 		}
 		
@@ -576,7 +577,7 @@ package {
 			warning.loadGraphic(Imports.IMPORT_WARNING, true, false, 420, 70);
 			warning.addAnimation("warn", [0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 1, 0], 12, false);
 			warning.frame = 0;
-			warning.set_position(camera_icon.x - warning.width / 2, camera_icon.y - warning.height / 2);
+			warning.set_position(camera_icon.x - warning.width / 2, camera_icon.y - warning.height);
 			this.add(warning);
 		}
 	}

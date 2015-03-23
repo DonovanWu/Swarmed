@@ -21,8 +21,8 @@ package core
 		public var w1_lv:int;	// level for weapon 1
 		public var w2_lv:int;	// level for weapon 2
 		
-		public const weaponMapping:Object = [["Revolver", "Marksman Rifle", "Assualt Rifle"],
-											["Handgun", "Machine Pistol", "Submachine Gun"]];
+		public const weaponMapping:Object = [["Revolver", "Marksman Rifle", "Assualt Rifle", "Assualt Rifle - Gold"],
+											["Handgun", "PDW", "Machine Pistol", "Submachine Gun"]];
 											
 		public var weaponSlot:int = 0;
 		public var reloading:Boolean = false;
@@ -31,7 +31,7 @@ package core
 		
 		public var dead:Boolean = false;
 		
-		protected var exp:Array = [[25, 210, false], [25, 210, false]];
+		protected var exp:Array = [[25, 75, 210, false], [25, 75, 210, false]];
 		
 		// ai specs: more in super class
 		private var _ct:int = 0;
@@ -55,7 +55,7 @@ package core
 			if (!player_controlled) {
 				// if it is AI, then pick a random gun
 				w1_lv = Util.int_random(0, 2);
-				w2_lv = Util.int_random(0, 2);
+				w2_lv = Util.int_random(0, 3);
 				shoot_span = Util.int_random(45, 75);
 			}
 			

@@ -249,6 +249,10 @@ package  {
 					return new Railgun();
 				case "Anti-materiel Rifle":
 					return new AMR();
+				case "PDW":
+					return new PDW();
+				case "Assualt Rifle - Gold":
+					return new AssualtRifleGold();
 				default:
 					// case "Submachine Gun":
 					return new SubmachineGun();
@@ -291,6 +295,10 @@ package  {
 					return Imports.GUN_RAILGUN;
 				case "Anti-materiel Rifle":
 					return Imports.GUN_AMR;
+				case "PDW":
+					return Imports.GUN_PDW;
+				case "Assualt Rifle - Gold":
+					return Imports.GUN_ARGOLD;
 				default:
 					return null;
 			}

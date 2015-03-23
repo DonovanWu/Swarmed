@@ -58,6 +58,8 @@ package  {
 		[Embed( source = "../resc/guns/SniperRifle.png" )] public static var GUN_SNIPER_RIFLE:Class;
 		[Embed( source = "../resc/guns/Railgun.png" )] public static var GUN_RAILGUN:Class;
 		[Embed( source = "../resc/guns/AMR.png" )] public static var GUN_AMR:Class;
+		[Embed( source = "../resc/guns/PDW.png" )] public static var GUN_PDW:Class;
+		[Embed( source = "../resc/guns/AssaultRifleGold.png" )] public static var GUN_ARGOLD:Class;
 		
 // sound
 		[Embed( source = "../resc/sound/sfx_explosion.mp3" )] public static var SOUND_EXPLOSION:Class;
@@ -69,5 +71,6 @@ package  {
 		[Embed( source = "../resc/sound/reload.mp3" )] public static var SOUND_RELOAD:Class;
 		[Embed( source = "../resc/sound/sfx_levelup.mp3" )] public static var SOUND_LEVELUP:Class;
 		[Embed( source = "../resc/sound/sfx_sniper.mp3" )] public static var SOUND_SNIPER:Class;
+		[Embed( source = "../resc/sound/alarm_sound.mp3" )] public static var SOUND_ALARM:Class;
 	}
 }
