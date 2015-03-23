@@ -42,8 +42,8 @@ package core
 		public function Vanguard(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.2;
-			sprintSpeed = 2.0;
+			walkSpeed = 1.8;
+			sprintSpeed = 2.5;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 300;
@@ -285,7 +285,7 @@ package core
 			
 			if (waypoint == null) {
 				// make new waypoint
-				waypoint = new FlxPoint(Util.int_random(100, 540), Util.int_random(100, 540));
+				waypoint = new FlxPoint(Util.int_random(100, _g.bounds.x - 100), Util.int_random(100, _g.bounds.y - 100));
 				return false;
 			} else {
 				_ct++;

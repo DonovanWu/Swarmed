@@ -48,8 +48,8 @@ package core
 		public function BigMech(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false, swarms:int = 0) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.0;
-			sprintSpeed = 1.2;
+			walkSpeed = 1.5;
+			sprintSpeed = 2.0;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 1800;
@@ -307,7 +307,7 @@ package core
 			
 			if (waypoint == null) {
 				// make new waypoint
-				waypoint = new FlxPoint(Util.int_random(100, 540), Util.int_random(100, 540));
+				waypoint = new FlxPoint(Util.int_random(100, _g.bounds.x - 100), Util.int_random(100, _g.bounds.y - 100));
 				return false;
 			} else {
 				_ct++;

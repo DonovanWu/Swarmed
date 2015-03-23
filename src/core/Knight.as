@@ -42,8 +42,8 @@ package core
 		public function Knight(x:Number = 0, y:Number = 0, w1lv:int = 0, w2lv:int = 0, human:Boolean = false) {
 			// character data
 			player_controlled = human;
-			walkSpeed = 1.5;
-			sprintSpeed = 2.5;
+			walkSpeed = 2.0;
+			sprintSpeed = 3.0;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
 			max_hp = 200;
@@ -283,7 +283,7 @@ package core
 			
 			if (waypoint == null) {
 				// make new waypoint
-				waypoint = new FlxPoint(Util.int_random(100, 540), Util.int_random(100, 540));
+				waypoint = new FlxPoint(Util.int_random(100, _g.bounds.x - 100), Util.int_random(100, _g.bounds.y - 100));
 				return false;
 			} else {
 				isMoving = true;

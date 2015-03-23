@@ -11,6 +11,7 @@ package  {
 		[Embed( source = "../resc/roadblock_v.jpg" )] public static var ROAD_BLOCK_V:Class;
 		[Embed( source = "../resc/packets.png" )] public static var IMPORT_PACKETS:Class;
 		[Embed( source = "../resc/title.png" )] public static var IMPORT_TITLE:Class;
+		[Embed( source = "../resc/warning.png" )] public static var IMPORT_WARNING:Class;
 		
 // accessories
 		[Embed( source = "../resc/reticle.png" )] public static var MOUSE_RETICLE:Class;

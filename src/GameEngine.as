@@ -40,6 +40,7 @@ package {
 		public var reticle:FlxSprite = new FlxSprite();
 		public var title_screen:FlxSprite = new FlxSprite();
 		public var camera_icon:FlxSprite = new FlxSprite();
+		public var warning:FlxSprite = new FlxSprite();
 		
 		// save
 		public var progress:Object = { knight:[0, 0], vanguard:[0, 0], scout: [0, 0], bigmech:[0, 0]};
@@ -56,11 +57,12 @@ package {
 		public var init:Boolean = false;
 		public var playing_music:Boolean = false;
 		public var swarms:int = 0;
+		public var bounds:FlxPoint = new FlxPoint(1280, 1280);
 		
 		override public function create():void {
 			super.create();
 			
-			FlxG.worldBounds = new FlxRect(0, 0, 1280, 1280);
+			FlxG.worldBounds = new FlxRect(0, 0, bounds.x, bounds.y);
 			
 			// layer: bottom
 			add_bg();
@@ -86,15 +88,16 @@ package {
 			add_reticle();
 			
 			camera_icon.visible = false;		// turn visible for debugging
-			this.add(_camera_icon);
+			camera_icon.set_position(640, 640);
+			camera_icon.width = 0; camera_icon.height = 0;
+			this.add(camera_icon);
 			
-			FlxG.camera.follow(_camera_icon);
-			var stgw:Number = FlxG.stage.stageWidth / 4; var stgh:Number = FlxG.stage.stageHeight / 4;
-			FlxG.camera.setBounds( -stgw, -stgh, _level.wid() + stgw * 2, _level.hei() + stgh * 2);
+			FlxG.camera.follow(camera_icon);
+			FlxG.camera.setBounds(0, 0, bounds.x, bounds.y);
 			
 			title_screen.loadGraphic(Imports.IMPORT_TITLE);
 			this.add(title_screen);
-			title_screen.set_position(camera_icon.x, camera_icon.y);
+			title_screen.set_position(FlxG.camera.x + 320, FlxG.camera.y + 320);
 			
 			this.add(debug_text);
 			debug_text.text = corpses.members.length + "";
@@ -110,18 +113,17 @@ package {
 		public function add_roadblocks():void {
 			var roadblock1:FlxSprite = new FlxSprite();
 			roadblock1.loadGraphic(Imports.ROAD_BLOCK);
-			roadblock1.set_position(Util.int_random(150, 450), Util.int_random(100, 200));
+			roadblock1.set_position(Util.int_random(150, 450), Util.int_random(100, 500));
 			roadblock1.mass = 10000000;
 			
 			var roadblock2:FlxSprite = new FlxSprite();
 			roadblock2.loadGraphic(Imports.ROAD_BLOCK);
-			roadblock2.set_position(Util.int_random(150, 450), Util.int_random(400, 500));
+			roadblock2.set_position(Util.int_random(150, 900), Util.int_random(700, 900));
 			roadblock2.mass = 10000000;
 			
 			var roadblock3:FlxSprite = new FlxSprite();
 			roadblock3.loadGraphic(Imports.ROAD_BLOCK_V);
-			var x3:Number = (Util.int_random(0,1) == 1) ? Util.int_random(100, 150) : Util.int_random(400, 450);
-			roadblock3.set_position(x3, Util.int_random(250, 300));
+			roadblock3.set_position(Util.int_random(700, 900), Util.int_random(150, 900));
 			roadblock3.mass = 10000000;
 			
 			roadblocks.add(roadblock1);
@@ -151,21 +153,23 @@ package {
 		}
 		
 		public function add_status_bar():void {
-			status_bar.loadGraphic(Imports.STATUS_BAR);
-			status_bar.set_position(0, 600);
+			var init_pos:FlxPoint = new FlxPoint(camera_icon.x +320, camera_icon.y + 320);
 			
-			var text_y:Number = 610;
+			status_bar.loadGraphic(Imports.STATUS_BAR);
+			status_bar.set_position(init_pos.x, init_pos.y + 600);
+			
+			var text_y:Number = init_pos.y + 610;
 			var text_size:Number = 12;
 			
-			hp_info.set_position(20, text_y);
+			hp_info.set_position(init_pos.x + 20, text_y);
 			hp_info.text = "hp=???";
 			hp_info.size = text_size;
 			
-			gun_info.set_position(170, text_y);
+			gun_info.set_position(init_pos.x + 170, text_y);
 			gun_info.text = "gun=???";
 			gun_info.size = text_size;
 			
-			ammo_info.set_position(480, text_y);
+			ammo_info.set_position(init_pos.x + 480, text_y);
 			ammo_info.text = "ammo=???";
 			ammo_info.size = text_size;
 			
@@ -173,6 +177,8 @@ package {
 			this.add(hp_info);
 			this.add(gun_info);
 			this.add(ammo_info);
+			
+			add_warning();
 		}
 		
 		public function add_reticle():void {
@@ -202,6 +208,7 @@ package {
 			
 			if (game_status == "title") {
 				title_screen.visible = true;
+				title_screen.set_position(camera_icon.x - 320, camera_icon.y - 320);
 				if (!init) {
 					FlxG.flash();
 					init = true;
@@ -219,6 +226,8 @@ package {
 				}
 				
 				title_screen.visible = false;
+				
+				update_cam_pos();
 				
 				timer++;
 				
@@ -242,12 +251,13 @@ package {
 		
 		private function spawn_chars():void {
 			if (timer % spawn_wait == 1 && chars.members.length <= MAX_ENEMY_ONSTAGE) {
+				var center:FlxPoint = new FlxPoint(640, 640);
 				
-				var r:Number = 720;
+				var r:Number = 1080;
 				var theta:Number = Util.float_random(0, 6.28);
 				
-				var x:Number = r * Math.cos(theta) + 320;
-				var y:Number = r * Math.sin(theta) + 320;
+				var x:Number = r * Math.cos(theta) + center.x;
+				var y:Number = r * Math.sin(theta) + center.y;
 				
 				/*
 				// only spawn scout for testing
@@ -275,14 +285,20 @@ package {
 		}
 		
 		private function spawn_swarm():void {
-			if (kills % 25 == 15) {
-				// every 10 kills will have a wave including multiple vanguards, knight and a big mech
-				for (var i:int = 0; i < 4; i++ ) {
-					var r:Number = 900;
+			if (kills % 30 == 15) {
+				// TODO: warns swarm in bound
+				FlxG.flash(0x20990000);
+				warning.play("warn");
+				
+				// every certain amount of kills will have a wave of swarm
+				for (var i:int = 0; i < 5; i++ ) {
+					var center:FlxPoint = new FlxPoint(640, 640);
+					
+					var r:Number = 1200;
 					var theta:Number = Util.float_random(0, 6.28);
 					
-					var x:Number = r * Math.cos(theta) + 320;
-					var y:Number = r * Math.sin(theta) + 320;
+					var x:Number = r * Math.cos(theta) + center.x;
+					var y:Number = r * Math.sin(theta) + center.y;
 					
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
@@ -290,24 +306,24 @@ package {
 					chars.add(vanguard);
 				}
 				
-				var scout:Scout = new Scout(800, 320);
+				var scout:Scout = new Scout(800, -100);
 				chars.add(scout);
 				
 				// one big mech
-				var bigmech:BigMech = new BigMech(-200, 320, 0, 0, false, swarms);
-				chars.add(bigmech);
+				var bigmech1:BigMech = new BigMech(-200, 320, 0, 0, false, swarms);
+				chars.add(bigmech1);
+				var bigmech2:BigMech = new BigMech(1320, 320, 0, 0, false, swarms);
+				chars.add(bigmech2);
 				
 				kills++;	// therefore kills is no longer an accurate count of things ... ;_;
 				// ending up with add 10 more kills to kill so...
 				swarms++;
-				
-				// TODO: warns swarm in bound
 			}
 		}
 		
 		private function spawn_ammo():void {
 			if (timer % spawn_wait == spawn_wait / 2) {
-				packets.add(new Packet(Util.int_random(40, 600), Util.int_random(40, 600), 2));
+				packets.add(new Packet(Util.int_random(40, bounds.x - 40), Util.int_random(40, bounds.y - 40), 2));
 			}
 		}
 		
@@ -397,7 +413,7 @@ package {
 						bullets.remove(itr_bullet, true);
 					}
 					
-					if (Util.is_out_of_bound(itr_bullet, new FlxPoint(640, 640))) {
+					if (Util.is_out_of_bound(itr_bullet, bounds)) {
 						// remove case: out of bound
 						// TODO: add hit animation
 						itr_bullet.do_remove();
@@ -447,6 +463,17 @@ package {
 				
 				gun_info.text = "gun: " + gun_text;
 				ammo_info.text = "ammo: " + ammo_text;
+				
+				var init_pos:FlxPoint = new FlxPoint(camera_icon.x - 320, camera_icon.y - 320);
+				var text_y:Number = init_pos.y + 610;
+				var text_size:Number = 12;
+				
+				status_bar.set_position(init_pos.x, init_pos.y + 600);
+				hp_info.set_position(init_pos.x + 20, text_y);
+				gun_info.set_position(init_pos.x + 170, text_y);
+				ammo_info.set_position(init_pos.x + 480, text_y);
+				
+				warning.set_position(camera_icon.x - warning.width / 2, camera_icon.y - warning.height / 2);
 			}
 		}
 		
@@ -526,6 +553,31 @@ package {
 				corpses.remove(corpses.getFirstAlive(), true);
 			}
 			corpses.add(corpse);
+		}
+		
+		private function update_cam_pos():void {
+			var x:int = (player.x() + FlxG.mouse.x) / 2;
+			var y:int = (player.y() + FlxG.mouse.y) / 2;
+			if (x < bounds.x / 4) {
+				x = bounds.x / 4;
+			} else if (x > bounds.x * 3 / 4) {
+				x = bounds.x * 3 / 4;
+			}
+			if (y < bounds.y / 4) {
+				y = bounds.y / 4;
+			} else if (y > bounds.y * 3 / 4) {
+				y = bounds.y * 3 / 4;
+			}
+			
+			camera_icon.set_position(x, y);
+		}
+		
+		private function add_warning():void {
+			warning.loadGraphic(Imports.IMPORT_WARNING, true, false, 420, 70);
+			warning.addAnimation("warn", [0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 1, 0], 12, false);
+			warning.frame = 0;
+			warning.set_position(camera_icon.x - warning.width / 2, camera_icon.y - warning.height / 2);
+			this.add(warning);
 		}
 	}
 	

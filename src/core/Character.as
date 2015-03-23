@@ -86,7 +86,7 @@ package core
 		}
 		
 		protected function update_keyboard():void {
-			var bound:FlxPoint = new FlxPoint(Util.WID, Util.HEI);
+			var bound:FlxPoint = _g.bounds;
 			
 			isMoving = false;
 			isSprinting = false;

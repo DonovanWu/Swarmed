@@ -96,7 +96,7 @@ package guns
 						} else if (name == "Hunting Rifle" || name == "Sniper Rifle" || name == "Railgun" || name == "Anti-materiel Rifle") {
 							FlxG.play(Imports.SOUND_SNIPER, 0.3);
 						} else {
-							FlxG.play(Imports.SOUND_SHOOT_3, 0.6);
+							FlxG.play(Imports.SOUND_SHOOT_3);
 						}
 						
 						for (var i:int = 1; i <= pellets; i++) {
@@ -246,7 +246,7 @@ package guns
 			
 			// var muzzle_pos:FlxPoint = _ch.muzzle_position();
 			
-			var range:Number = (gunstat.range == null)?930:gunstat.range;
+			var range:Number = (gunstat.range == null)?1800:gunstat.range;
 			var bullet:Bullet = new Bullet(muzzle_pos.x, muzzle_pos.y, theta, bullet_spd, damage, range);
 			
 			if (gunstat.spawn != null) {
