@@ -268,6 +268,10 @@ package core
 		public function should_remove():Boolean {
 			return false;
 		}
+		
+		public function is_curr_weap_max():Boolean {
+			return true;
+		}
 	}
 
 }

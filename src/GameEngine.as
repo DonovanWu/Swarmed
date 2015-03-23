@@ -461,9 +461,12 @@ package {
 				if (weapon != null) {
 					gun_text = weapon.name;
 					ammo_text = weapon.mag + " / " + weapon.backup_ammo();
+					if (player.is_curr_weap_max()) {
+						suffix = "(Max Level)";
+					}
 				}
 				
-				gun_info.text = "gun: " + gun_text;
+				gun_info.text = "gun: " + gun_text + " " + suffix;
 				ammo_info.text = "ammo: " + ammo_text;
 				
 				var init_pos:FlxPoint = new FlxPoint(camera_icon.x - 320, camera_icon.y - 320);

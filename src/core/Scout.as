@@ -468,6 +468,16 @@ package core
 		override public function should_remove():Boolean {
 			return dead;
 		}
+		
+		override public function is_curr_weap_max():Boolean {
+			var w_lv:int = 0;
+			if (weaponSlot == 0) {
+				w_lv = w1_lv;
+			} else {
+				w_lv = w2_lv;
+			}
+			return exp[weaponSlot][w_lv] == false;
+		}
 	}
 
 }
