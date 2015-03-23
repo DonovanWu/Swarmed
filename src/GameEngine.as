@@ -270,12 +270,12 @@ package {
 				if (choice < 50) {
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
-					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] - 4) * 10) {
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] - 4.5) * 10) {
 						var scout:Scout = new Scout(x, y);
 						chars.add(scout);
 					}
 				} else {
-					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] + 1) * 10) {
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] - 0.5) * 10) {
 						var bigmech:BigMech = new BigMech(-200, 320);
 						chars.add(bigmech);
 					}
@@ -286,7 +286,7 @@ package {
 		}
 		
 		private function spawn_swarm():void {
-			if (kills % 30 == 15) {
+			if (kills % 35 == 16) {
 				// TODO: warns swarm in bound
 				FlxG.flash(0x20990000);
 				FlxG.play(Imports.SOUND_ALARM);
