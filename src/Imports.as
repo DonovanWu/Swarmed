@@ -28,6 +28,7 @@ package  {
 		[Embed( source = "../resc/bubble.png" )] public static var IMPORT_BUBBLE:Class;
 		[Embed( source = "../resc/particles/bullet_sniper.png" )] public static var BULLET_SNIPER:Class;
 		[Embed( source = "../resc/particles/bullet_railgun.png" )] public static var BULLET_RAILGUN:Class;
+		[Embed( source = "../resc/particles/ripple.png" )] public static var IMPORT_RIPPLE:Class;
 
 // player
 		[Embed( source = "../resc/chars/knight_body.png" )] public static var KNIGHT_BODY:Class;

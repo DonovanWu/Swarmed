@@ -19,6 +19,7 @@ package core
 		}
 		
 		override public function revive_robot():void {
+			super.revive_robot();
 			_g.revive_knight(this._x, this._y, this);
 		}
 	}

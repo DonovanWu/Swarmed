@@ -408,11 +408,9 @@ package core
 			_g._particles.add(explosion);
 			explosion.explode();
 			
-			// spawn a corpse on stage
-			// _g.corpses.add(new KnightCorpse(this.x(), this.y(), ang));
-			_g.add_corpse(new ScoutCorpse(this.x(), this.y(), ang));
-			
 			if (!player_controlled) {
+				// spawn a corpse on stage (only when it is AI-controlled)
+				_g.add_corpse(new ScoutCorpse(this.x(), this.y(), ang));
 				if (_g.kills == 0) {
 					// weapon 1 upgrade
 					_g.packets.add(new Packet(this.x(), this.y(), 0));

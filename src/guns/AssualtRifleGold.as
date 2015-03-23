@@ -18,7 +18,7 @@ package guns
 				pellets: 1,
 				mag_size : 40,
 				ammo: 240,
-				spread : { hip : 9, aim : 2.5 }
+				spread : { hip : 9, aim : 1 }
 			});
 		}
 	}

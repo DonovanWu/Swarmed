@@ -2,6 +2,7 @@ package core
 {
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxG;
+	import particles.Ripple;
 	/**
 	 * ...
 	 * @author Wenrui (Donovan) Wu
@@ -36,7 +37,8 @@ package core
 		}
 		
 		public function revive_robot():void {
-			
+			// add ripple as a particle
+			_g._particles.add(new Ripple(this._x, this._y));
 		}
 		
 	}

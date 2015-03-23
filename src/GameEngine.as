@@ -221,7 +221,7 @@ package {
 				}
 			} else if (game_status == "in-game") {
 				if (init) {
-					FlxG.flash();
+					FlxG.flash(0xffffffff, 0.6);
 					init = false;
 				}
 				
@@ -313,7 +313,7 @@ package {
 				chars.add(scout2);
 				
 				// one big mech
-				var bigmech:BigMech = new BigMech(-200, 320, 0, 0, false, swarms);
+				var bigmech:BigMech = new BigMech(-200, 640, 0, 0, false, swarms);
 				chars.add(bigmech);
 				
 				kills++;	// therefore kills is no longer an accurate count of things ... ;_;
