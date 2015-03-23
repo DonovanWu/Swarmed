@@ -4,6 +4,7 @@ package core
 	import guns.BulletEmitter;
 	import misc.FlxGroupSprite;
 	import org.flixel.*;
+	import particles.SprintShadow;
 	/**
 	 * ...
 	 * @author Wenrui (Donovan) Wu
@@ -126,6 +127,11 @@ package core
 					stance = "hip";
 					trace("changed stance to hip");
 				}
+			}
+			
+			if (isSprinting && isMoving) {
+				// spawn sprint shadow
+				_g._particles.add(new SprintShadow(this));
 			}
 			
 			weapon_control();

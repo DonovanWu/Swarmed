@@ -219,6 +219,7 @@ package {
 						itr_corpse.update_corpse(this);
 					}
 				}
+				update_particles();
 			} else if (game_status == "in-game") {
 				if (init) {
 					FlxG.flash(0xffffffff, 0.6);
