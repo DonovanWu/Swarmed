@@ -40,6 +40,7 @@ package  {
 		[Embed( source = "../resc/chars/BigMechCorpse.png" )] public static var BIGMECH_CORPSE:Class;
 		[Embed( source = "../resc/chars/scout_body.png" )] public static var SCOUT_BODY:Class;
 		[Embed( source = "../resc/chars/scout_corpse.png" )] public static var SCOUT_CORPSE:Class;
+		[Embed( source = "../resc/chars/BigMechRedEye.png" )] public static var BIGMECH_BODY_RED_EYE:Class;
 		
 // weapon sprites
 		[Embed( source = "../resc/guns/AssaultRifle.png" )] public static var GUN_ASSAULT_RIFLE:Class;

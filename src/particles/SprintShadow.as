@@ -22,6 +22,8 @@ package particles
 				this.loadGraphic(Imports.VANGUARD_BODY);
 			} else if (player is Scout) {
 				this.loadGraphic(Imports.SCOUT_BODY);
+			} else if (player is BigMech) {
+				this.visible = false;
 			}
 			this.set_position(player.x() - this.width / 2, player.y() - this.height / 2);
 			this.angle = player.ang;

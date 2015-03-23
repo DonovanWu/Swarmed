@@ -52,17 +52,21 @@ package core
 			sprintSpeed = 2.0;
 			w1_lv = w1lv;
 			w2_lv = w2lv;
-			max_hp = 1800;
+			max_hp = 2700;
 			regen_amount = 0;
 			giant = true;
 			rotation_spd = 1.5;
 			
 			if (!player_controlled) {
 				shoot_span = Util.int_random(45, 75);
-				max_hp = 900 * (2 + swarms);
+				max_hp = 1350 * (2 + swarms);
 			}
 			
-			body.loadGraphic(Imports.BIGMECH_BODY);
+			if (max_hp < 5400) {
+				body.loadGraphic(Imports.BIGMECH_BODY);
+			} else {
+				body.loadGraphic(Imports.BIGMECH_BODY_RED_EYE);
+			}
 			limbs.visible = false;
 			
 			hitbox.loadGraphic(Imports.IMPORT_HITBOX_80x80);

@@ -270,7 +270,7 @@ package {
 				if (choice < 50) {
 					var knight:Knight = new Knight(x, y);
 					chars.add(knight);
-					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] - 2) * 10) {
+					if (choice < (player.getWeaponLevel()[0] + player.getWeaponLevel()[1] - 4) * 10) {
 						var scout:Scout = new Scout(x, y);
 						chars.add(scout);
 					}
@@ -293,7 +293,7 @@ package {
 				warning.play("warn");
 				
 				// every certain amount of kills will have a wave of swarm
-				for (var i:int = 0; i < 5; i++ ) {
+				for (var i:int = 0; i < 6; i++ ) {
 					var center:FlxPoint = new FlxPoint(640, 640);
 					
 					var r:Number = 1200;
