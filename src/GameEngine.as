@@ -286,7 +286,7 @@ package {
 		}
 		
 		private function spawn_swarm():void {
-			if (kills % 35 == 16) {
+			if (kills % 32 == 15) {
 				// TODO: warns swarm in bound
 				FlxG.flash(0x20990000);
 				FlxG.play(Imports.SOUND_ALARM);
