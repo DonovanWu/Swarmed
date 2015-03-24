@@ -34,7 +34,7 @@ package  {
 		public static var SELECT_FIRE:Vector.<String> = Vector.<String>(["F"]);
 		public static var RELOAD:Vector.<String> = Vector.<String>(["R"]);
 		
-		public static var WEAPON_SWITCH:Vector.<String> = Vector.<String>(["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX"]);	
+		public static var WEAPON_SWITCH:Vector.<String> = Vector.<String>(["ONE", "TWO"]);	
 		
 		// In-game Settings
 		public static var TUTOR_TIMER:int = 300;

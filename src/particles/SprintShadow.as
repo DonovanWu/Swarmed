@@ -28,7 +28,7 @@ package particles
 			this.set_position(player.x() - this.width / 2, player.y() - this.height / 2);
 			this.angle = player.ang;
 			this.alpha = 0.75;
-			alpha_decay = player.moveSpeed * player.mobility / 20;
+			alpha_decay = player.moveSpeed * player.mobility / 25;
 		}
 		
 		override public function update_particle(game:GameEngine):void {
